@@ -7,6 +7,8 @@ The aims of these reports are twofold:
 - To investigate what publically available data can tell the public about how the City of Toronto’s bike sharing service was used before, during and after the COVID-19 pandemic and to consider how the service might best be managed going forward.
 - To explore the use of different software tools to analyze and visualize this rich temporal and geospatial dataset and to create readable, interpretable reports.
 
+The intention is for this series of reports to be published as blog posts on LinkedIn, but they are also readable in this repo along with the underlying code.
+
 ## Contents
 
 - Data Processing: scripts for ingesting and preprocessing data from the City of Toronto. At this point, all data importing was done in R/tidyverse.
@@ -18,4 +20,4 @@ There are inherent limitations to working with the public data provided by the C
 
 ## The Authors
 
-At the moment, I (Chris) am responsible for the code and the report writing. Amanda Xuereb (LINK?) and Andy Wong have been collaborative brainstorming and editing partners and may well contribute coding in future reports.
+At the moment, I (Chris) am responsible for the code and the report writing. [Amanda Xuereb](https://www.linkedin.com/in/amanda-xuereb-4a75139a/) and Andy Wong have been collaborative brainstorming and editing partners and may well contribute coding in future reports.
