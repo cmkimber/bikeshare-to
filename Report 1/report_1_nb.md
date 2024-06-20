@@ -11,7 +11,7 @@ Bike-sharing systems, both public and private, are an increasingly common part o
 
 ## A Quick Word on Data
 
-In this report, we chose to limit our analysis to the years 2017-2022. While older data is available from the City of Toronto, the data provider changed during 2016. This time period provides a window into ridership before, during the peak of, and in the aftermath of the COVID-19 pandemic. It also spans a significant period of growth in the Bike Share Toronto network, with the first major network expansion having taken place in 2016 and continued rounds of expansion occurring in each subsequent year.  Details on data ingestion and pre-processing can be found at (INSERT LINK).
+In this report, we chose to limit our analysis to the years 2017-2022. While older data is available from the City of Toronto, the data provider changed during 2016. This time period provides a window into ridership before, during the peak of, and in the aftermath of the COVID-19 pandemic. It also spans a significant period of growth in the Bike Share Toronto network, with the first major network expansion having taken place in 2016 and continued rounds of expansion occurring in each subsequent year.  Details on data ingestion and pre-processing can be found in [Data Processing](https://github.com/cmkimber/bikeshare-to/blob/main/Data%20Processing/data_loading.ipynb).
 
 ##  User Types
 
