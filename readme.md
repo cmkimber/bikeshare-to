@@ -1,10 +1,10 @@
 # Bike Share Toronto Data Analysis
 ## About This Project
 
-This repository is to contain a series of reports and associated code for an analysis of usage data from Bike Share Toronto, a publically owned bike sharing service in Toronto, ON, Canada. The data is provided freely by the City of Toronto on their [Open Data Portal](https://open.toronto.ca/). This analysis is in no way associated with the City of Toronto or Bike Share Toronto.
+This repository is to contain a series of reports and associated code for an analysis of usage data from Bike Share Toronto, a publicly owned bike sharing service in Toronto, ON, Canada. The data is provided freely by the City of Toronto on their [Open Data Portal](https://open.toronto.ca/). This analysis is in no way associated with the City of Toronto or Bike Share Toronto.
 
 The aims of these reports are twofold:
-- To investigate what publically available data can tell the public about how the City of Toronto’s bike sharing service was used before, during and after the COVID-19 pandemic and to consider how the service might best be managed going forward.
+- To investigate what publicly available data can tell the public about how the City of Toronto’s bike sharing service was used before, during and after the COVID-19 pandemic and to consider how the service might best be managed going forward.
 - To explore the use of different software tools to analyze and visualize this rich temporal and geospatial dataset and to create readable, interpretable reports.
 
 The intention is for this series of reports to be published as blog posts on LinkedIn, but they are also readable in this repo along with the underlying code.
