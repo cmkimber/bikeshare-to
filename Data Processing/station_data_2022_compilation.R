@@ -49,3 +49,6 @@ map <- leaflet() %>%
   addMarkers(data = stations_sf,
              popup = ~name)
 map
+
+saveRDS(stations_sf, "./Data/stations_update_2022_sf.rds")
+
