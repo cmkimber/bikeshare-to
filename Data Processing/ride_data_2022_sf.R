@@ -25,20 +25,3 @@ rides_2022_sf <- rides_2022_sf %>% rename(end_geometry = geometry)
 
 saveRDS(rides_2022_sf, "./Data/rides_2022_sf.rds")
 
-# Some sanity-checking maps
-map <- leaflet() %>%
-  addTiles() %>%
-  addHeatmap(data = rides_2022_sf$start_geometry,
-             radius = 8)
-map
-
-map2 <- leaflet() %>%
-  addTiles() %>%
-  addHeatmap(data = rides_2022_sf$end_geometry,
-             radius = 8)
-map2
-
-# Testing adding a linestring for each ride to plot the 'as-the-crow-flies" path of each ride
-st_line_test <- st_union(rides_2022_sf$start_geometry[1],
-                         rides_2022_sf$end_geometry[1]) %>%
-  st_cast("LINESTRING")
