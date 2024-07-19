@@ -26,21 +26,31 @@ get_station_rank_popup <- function(station_row){
 }
 
 ui <- fluidPage(
-  radioButtons("year_vs_month",
-               "Time Period to Display:",
-               choices = c("Yearly", "Monthly"),
-               selected = "Yearly"),
-  selectInput("select_month",
-              "Month to Display:",
-              choices = NULL,
-              selected = NULL,
-              selectize = FALSE),
-  leafletOutput("top_start_stations"),
-  DTOutput("top_15_start_stations")
+  titlePanel(
+    "Title Here"
+  ),
+  sidebarLayout(
+    sidebarPanel(
+      radioButtons("year_vs_month",
+                   "Time Period to Display:",
+                   choices = c("Yearly", "Monthly"),
+                   selected = "Yearly"),
+      selectInput("select_month",
+                  "Month to Display:",
+                  choices = NULL,
+                  selected = NULL,
+                  selectize = FALSE)
+      ),
+  mainPanel(
+    leafletOutput("top_start_stations"),
+    DTOutput("top_15_start_stations")
+    )
+  )
 )
 
 server <- function(input, output, session){
   
+  # an empty reactive value to hold the data on start stations filtered by time period
   top_start_stations_df <- reactiveVal(value = NULL)
   
   observeEvent(input$year_vs_month, {
