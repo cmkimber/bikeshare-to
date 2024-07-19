@@ -105,8 +105,8 @@ server <- function(input, output, session){
                 by = join_by(Start.Station.Id == station_id)) %>%
       select(Start.Month, Start.Station.Id, n, name, geometry) %>%
       rename(station_id = Start.Station.Id) %>%
-      mutate(rank = row_number()) %>%
-      filter(Start.Month == input$select_month)
+      filter(Start.Month == input$select_month) %>%
+      mutate(rank = row_number())
     top_start_stations_df(temp_df) 
   })
     
