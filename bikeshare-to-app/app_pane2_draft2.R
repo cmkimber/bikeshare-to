@@ -39,7 +39,10 @@ ui <- fluidPage(
                   "Month to Display:",
                   choices = NULL,
                   selected = NULL,
-                  selectize = FALSE)
+                  selectize = FALSE),
+      checkboxInput("filter_top_stations",
+                    "Display Top 15 Stations Only",
+                    value = FALSE)
       ),
   mainPanel(
     leafletOutput("top_start_stations"),
@@ -108,25 +111,54 @@ server <- function(input, output, session){
   })
     
   # when the filtered data is changed, plot the new set of station markers
-  observeEvent(top_start_stations_df(), {
-    leafletProxy("top_start_stations") %>%
-      clearGroup("station_popup")
-    leafletProxy("top_start_stations") %>%
-      clearGroup("start_stations")
-    leafletProxy("top_start_stations") %>%
-      addCircleMarkers(layerId = ~top_start_stations_df()$station_id,
-                       lng = st_coordinates(top_start_stations_df() %>%
+  observeEvent(c(top_start_stations_df(), input$filter_top_stations), {
+
+    if (input$filter_top_stations == FALSE){
+      leafletProxy("top_start_stations") %>%
+        clearGroup("station_popup")
+      leafletProxy("top_start_stations") %>%
+        clearGroup("start_stations")
+      leafletProxy("top_start_stations") %>%
+        addCircleMarkers(layerId = ~top_start_stations_df()$station_id,
+                         lng = st_coordinates(top_start_stations_df() %>%
+                                                pull(geometry))[,1],
+                         lat = st_coordinates(top_start_stations_df() %>%
+                                                pull(geometry))[,2],
+                         radius = 8,
+                         color = "black",
+                         weight = 2,
+                         opacity = 0.6,
+                         fillColor = ~pal_ride_num(top_start_stations_df()$n),
+                         fillOpacity = 0.8,
+                         data = top_start_stations_df(),
+                         group = "start_stations")
+    }
+    else if (input$filter_top_stations == TRUE) {
+      filtered_top_stations <- top_start_stations_df() %>%
+        slice_head(n = 15)
+      
+      filtered_palette <- colorNumeric("Reds",
+                                       domain = top_start_stations_df()$n)
+      
+      leafletProxy("top_start_stations") %>%
+        clearGroup("station_popup")
+      leafletProxy("top_start_stations") %>%
+        clearGroup("start_stations")
+      leafletProxy("top_start_stations") %>%
+      addCircleMarkers(layerId = ~filtered_top_stations$station_id,
+                       lng = st_coordinates(filtered_top_stations %>%
                                               pull(geometry))[,1],
-                       lat = st_coordinates(top_start_stations_df() %>%
+                       lat = st_coordinates(filtered_top_stations %>%
                                               pull(geometry))[,2],
                        radius = 8,
                        color = "black",
                        weight = 2,
                        opacity = 0.6,
-                       fillColor = ~pal_ride_num(top_start_stations_df()$n),
+                       fillColor = ~filtered_palette(filtered_top_stations$n),
                        fillOpacity = 0.8,
                        data = top_start_stations_df(),
                        group = "start_stations")
+    }      
   })
 
   # set default selected station value from inputs to be null
@@ -157,7 +189,7 @@ server <- function(input, output, session){
           filter(station_id == selected_start_station()) %>%
           pull(geometry),
         group = "station_popup"
-      )
+    )
   })
   
   # sync selected station from inputs to the reactive value
