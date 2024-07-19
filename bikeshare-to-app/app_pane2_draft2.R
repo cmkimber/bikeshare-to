@@ -200,6 +200,11 @@ server <- function(input, output, session){
     selected_start_station(selected_row_start)
   })
   
+  # wipe the selected station reactive when the input data (and thus the map) changes, otherwise the currently selected station cannot be selected again on the map until the selected station value is changed
+  observeEvent(top_start_stations_df(), {
+    selected_start_station(NULL)
+  })
+  
   output$top_start_stations <- renderLeaflet({
     leaflet() %>%
       addTiles() %>%
