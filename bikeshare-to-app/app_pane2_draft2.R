@@ -115,10 +115,9 @@ server <- function(input, output, session){
 
     if (input$filter_top_stations == FALSE){
       leafletProxy("top_start_stations") %>%
-        clearGroup("station_popup")
-      leafletProxy("top_start_stations") %>%
-        clearGroup("start_stations")
-      leafletProxy("top_start_stations") %>%
+        clearGroup("station_popup") %>%
+        clearGroup("highlighted_start_station") %>%
+        clearGroup("start_stations") %>%
         addCircleMarkers(layerId = ~top_start_stations_df()$station_id,
                          lng = st_coordinates(top_start_stations_df() %>%
                                                 pull(geometry))[,1],
@@ -141,10 +140,9 @@ server <- function(input, output, session){
                                        domain = top_start_stations_df()$n)
       
       leafletProxy("top_start_stations") %>%
-        clearGroup("station_popup")
-      leafletProxy("top_start_stations") %>%
-        clearGroup("start_stations")
-      leafletProxy("top_start_stations") %>%
+        clearGroup("station_popup") %>%
+        clearGroup("highlighted_start_station") %>%
+        clearGroup("start_stations") %>%
       addCircleMarkers(layerId = ~filtered_top_stations$station_id,
                        lng = st_coordinates(filtered_top_stations %>%
                                               pull(geometry))[,1],
@@ -168,8 +166,7 @@ server <- function(input, output, session){
   observeEvent(selected_start_station(), {
     req(!is.null(selected_start_station()))
     leafletProxy("top_start_stations") %>%
-      clearGroup(group = "highlighted_start_station")
-    leafletProxy("top_start_stations") %>%
+      clearGroup(group = "highlighted_start_station") %>%
       addCircles(stroke = TRUE,
                  weight = 15,
                  color = "black",
