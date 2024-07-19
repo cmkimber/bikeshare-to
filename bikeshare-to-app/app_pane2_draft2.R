@@ -115,8 +115,10 @@ server <- function(input, output, session){
       clearGroup("start_stations")
     leafletProxy("top_start_stations") %>%
       addCircleMarkers(layerId = ~top_start_stations_df()$station_id,
-                       lng = st_coordinates(top_start_stations_df()$geometry)[,1],
-                       lat = st_coordinates(top_start_stations_df()$geometry)[,2],
+                       lng = st_coordinates(top_start_stations_df() %>%
+                                              pull(geometry))[,1],
+                       lat = st_coordinates(top_start_stations_df() %>%
+                                              pull(geometry))[,2],
                        radius = 8,
                        color = "black",
                        weight = 2,
