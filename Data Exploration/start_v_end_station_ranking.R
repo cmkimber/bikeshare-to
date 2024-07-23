@@ -1,4 +1,5 @@
 library(tidyverse)
+library(sf)
 
 rides_2022_sf <- readRDS("./Data/rides_2022_sf.rds")
 stations_update_2022_sf <- readRDS("./Data/stations_update_2022_sf.rds")
@@ -24,6 +25,28 @@ top_end_stations_annual <- rides_2022_sf %>%
 top_startvend_annual <- top_start_stations_annual %>%
   select(-n) %>%
   left_join(top_end_stations_annual %>% select(-n))
+
+top_startvend_long <- top_startvend_annual %>%
+  filter(start.rank <= 15 | end.rank <= 15) %>%
+  pivot_longer(cols = !(station_id:geometry),
+               names_to = "terminus",
+               values_to = "rank") %>%
+  mutate(terminus = as.factor(terminus)) %>%
+  mutate(terminus = fct_relevel(terminus, "start.rank", "end.rank"))
+
+ggplot(top_startvend_long, aes(x = terminus, y = rank, group = station_id)) +
+  geom_line() +
+  labs(x = "",
+       y = "Rank (# of Trips)") +
+  scale_x_discrete(expand = c(0,0),
+                   labels = c("Start Station", "End Station")) +
+  scale_y_reverse(limits = c(max(top_startvend_long$rank), 1),
+                  expand = c(0,1),
+                  breaks = c(1,seq(5,40, 5)),
+                  sec.axis = sec_axis(trans = ~.,
+                                      breaks = c(1,seq(5,40, 5)))) +
+  theme_minimal() +
+  theme(plot.margin = margin(5,15,5,5))
 
 top_start_stations_month <- rides_2022_sf %>%
   count(Start.Month = month(Start.Time), Start.Station.Id) %>%
