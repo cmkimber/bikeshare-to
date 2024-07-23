@@ -34,11 +34,20 @@ top_startvend_long <- top_startvend_annual %>%
   mutate(terminus = as.factor(terminus)) %>%
   mutate(terminus = fct_relevel(terminus, "start.rank", "end.rank"))
 
-ggplot(top_startvend_long, aes(x = terminus, y = rank, group = station_id)) +
-  geom_line() +
+library(ggiraph)
+library(glue)
+p <- ggplot(top_startvend_long, aes(x = terminus, y = rank, group = station_id)) +
+  geom_line_interactive(aes(tooltip = glue("Station ID#: {station_id}<br/>",
+                                           "Station Name: {name}<br/>"),
+                            data_id = station_id), size = 1.2,
+                        alpha = 0.6) +
+  geom_point_interactive(aes(tooltip = glue("Station ID#: {station_id}<br/>",
+                                            "Station Name: {name}<br/>",
+                                            "Rank: {rank}"),
+                             data_id = station_id)) + 
   labs(x = "",
        y = "Rank (# of Trips)") +
-  scale_x_discrete(expand = c(0,0),
+  scale_x_discrete(expand = c(0.01,0.01),
                    labels = c("Start Station", "End Station")) +
   scale_y_reverse(limits = c(max(top_startvend_long$rank), 1),
                   expand = c(0,1),
@@ -47,6 +56,12 @@ ggplot(top_startvend_long, aes(x = terminus, y = rank, group = station_id)) +
                                       breaks = c(1,seq(5,40, 5)))) +
   theme_minimal() +
   theme(plot.margin = margin(5,15,5,5))
+
+girafe(ggobj = p,
+       options = list(
+         opts_hover_inv(css = "stroke-width:1;opacity:0.4"),
+         opts_hover(css = "stroke-width:4;opacity:1")
+       ))
 
 top_start_stations_month <- rides_2022_sf %>%
   count(Start.Month = month(Start.Time), Start.Station.Id) %>%
