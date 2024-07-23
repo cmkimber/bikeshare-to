@@ -15,6 +15,13 @@ names(month_values) <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
 
 pal_ride_num <- colorNumeric(palette = "Reds", domain = NULL)
 
+station_choices <- stations_update_2022_sf$station_id
+for (i in (1:length(station_choices)))
+names(station_choices)[i] <- paste0(stations_update_2022_sf$name[i],
+                            " (#",
+                            stations_update_2022_sf$station_id[i],
+                            ")")
+
 get_station_rank_popup <- function(station_row){
   popup_text <- glue(
     "<b>Station ID#:</b> {station_row$station_id}<br/>",
@@ -40,6 +47,13 @@ ui <- fluidPage(
                   choices = NULL,
                   selected = NULL,
                   selectize = FALSE),
+      # note selectize is used here with multiple selections enabled and a max number of selections of 1 to facilitate having the app initialize with no station selected
+      selectizeInput("select_station",
+                  "Choose Station:",
+                  choices = station_choices,
+                  multiple = TRUE,
+                  selected = NULL,
+                  options = list(maxItems = 1)),
       checkboxInput("filter_top_stations",
                     "Display Top 15 Stations Only",
                     value = FALSE)
@@ -234,11 +248,12 @@ server <- function(input, output, session){
   })
 
   # set default selected station value from inputs to be null
-  selected_start_station <- reactiveVal(value = NULL)
+  selected_station <- reactiveVal(value = NULL)
   
   # sync selected station from reactive value to inputs
-  observeEvent(selected_start_station(), {
-    req(!is.null(selected_start_station()))
+  observeEvent(selected_station(), {
+    req(!is.null(selected_station()))
+    
     leafletProxy("top_start_stations") %>%
       clearGroup(group = "highlighted_start_station") %>%
       addCircles(stroke = TRUE,
@@ -246,27 +261,22 @@ server <- function(input, output, session){
                  color = "black",
                  opacity = 0.8,
                  data = top_start_stations_df() %>%
-                   filter(station_id == selected_start_station()) %>%
+                   filter(station_id == selected_station()) %>%
                    pull(geometry),
                  group = "highlighted_start_station")
     leafletProxy("top_start_stations") %>%
       clearGroup("station_popup")
-    popup_text <- filter(top_start_stations_df(), station_id == selected_start_station()) %>%
+    popup_text <- filter(top_start_stations_df(), station_id == selected_station()) %>%
       get_station_rank_popup()
     leafletProxy("top_start_stations") %>%
       addPopups(
         popup = popup_text,
         data = top_start_stations_df() %>%
-          filter(station_id == selected_start_station()) %>%
+          filter(station_id == selected_station()) %>%
           pull(geometry),
         group = "station_popup"
-    )
-  })
-  
-  selected_end_station <- reactiveVal(value = NULL)
-  
-  observeEvent(selected_end_station(), {
-    req(!is.null(selected_end_station()))
+      )
+    
     leafletProxy("top_end_stations") %>%
       clearGroup(group = "highlighted_end_station") %>%
       addCircles(stroke = TRUE,
@@ -274,51 +284,65 @@ server <- function(input, output, session){
                  color = "black",
                  opacity = 0.8,
                  data = top_end_stations_df() %>%
-                   filter(station_id == selected_end_station()) %>%
+                   filter(station_id == selected_station()) %>%
                    pull(geometry),
                  group = "highlighted_end_station")
     leafletProxy("top_end_stations") %>%
       clearGroup("station_popup")
-    popup_text <- filter(top_end_stations_df(), station_id == selected_end_station()) %>%
+    popup_text <- filter(top_end_stations_df(), station_id == selected_station()) %>%
       get_station_rank_popup()
     leafletProxy("top_end_stations") %>%
       addPopups(
         popup = popup_text,
         data = top_end_stations_df() %>%
-          filter(station_id == selected_end_station()) %>%
+          filter(station_id == selected_station()) %>%
           pull(geometry),
         group = "station_popup"
       )
+    
+    updateSelectizeInput(session,
+                         inputId = "select_station",
+                         selected = selected_station())
   })
   
   # sync selected station from inputs to the reactive value
   observeEvent(input$top_start_stations_marker_click$id, {
-    selected_start_station(input$top_start_stations_marker_click$id)
+    selected_station(input$top_start_stations_marker_click$id)
   })
   observeEvent(input$top_15_start_stations_rows_selected, {
     selected_row_start <- top_start_stations_df() %>%
       slice(input$top_15_start_stations_rows_selected) %>%
       pull(station_id)
-    selected_start_station(selected_row_start)
+    selected_station(selected_row_start)
   })
   
   observeEvent(input$top_end_stations_marker_click$id, {
-    selected_end_station(input$top_end_stations_marker_click$id)
+    selected_station(input$top_end_stations_marker_click$id)
   })
   observeEvent(input$top_15_end_stations_rows_selected, {
     selected_row_end <- top_end_stations_df() %>%
       slice(input$top_15_end_stations_rows_selected) %>%
       pull(station_id)
-    selected_end_station(selected_row_end)
+    selected_station(selected_row_end)
+  })
+  
+  observeEvent(input$select_station, {
+    selected_station(input$select_station)
   })
   
   # wipe the selected station reactive when the input data (and thus the map) changes, otherwise the currently selected station cannot be selected again on the map until the selected station value is changed
   observeEvent(top_start_stations_df(), {
-    selected_start_station(NULL)
+    selected_station(NULL)
+    updateSelectizeInput(session,
+                         inputId = "select_station",
+                         selected = "")
   })
   
   observeEvent(top_end_stations_df(), {
-    selected_end_station(NULL)
+    selected_station(NULL)
+    updateSelectizeInput(session,
+                         inputId = "select_station",
+                         selected = "")
   })
   
   output$top_start_stations <- renderLeaflet({
