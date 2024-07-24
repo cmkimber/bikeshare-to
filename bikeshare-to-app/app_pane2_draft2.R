@@ -2,6 +2,7 @@ library(tidyverse)
 library(sf)
 library(shiny)
 library(leaflet)
+library(ggiraph)
 library(DT)
 library(RColorBrewer)
 library(glue)
@@ -10,11 +11,13 @@ library(glue)
 rides_2022_sf <- readRDS("./Data/rides_2022_sf.rds")
 stations_update_2022_sf <- readRDS("./Data/stations_update_2022_sf.rds")
 
+# define month abbreviations for monthly data select input
 month_values <- seq(1,12,1)
 names(month_values) <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
 pal_ride_num <- colorNumeric(palette = "Reds", domain = NULL)
 
+# define choices for station select input
 station_choices <- stations_update_2022_sf$station_id
 for (i in (1:length(station_choices)))
 names(station_choices)[i] <- paste0(stations_update_2022_sf$name[i],
@@ -68,6 +71,9 @@ ui <- fluidPage(
                leafletOutput("top_end_stations"),
                DTOutput("top_15_end_stations")
                )
+      ),
+      fluidRow(
+        girafeOutput("slopegraph")
       )
     )
   )
@@ -383,6 +389,54 @@ server <- function(input, output, session){
                              searching = FALSE,
                              pageLength = 15),
               colnames = c("Station ID", "Location", "# of Rides Started"))
+  })
+  
+  output$slopegraph <- renderGirafe({
+    top_startvend_df <- top_start_stations_df() %>%
+      select(c(station_id, name, rank)) %>%
+      rename(start.rank = rank) %>%
+      left_join(top_end_stations_df() %>%
+                  select(c(station_id, name, rank)) %>%
+                  rename(end.rank = rank),
+                by = join_by(station_id, name))
+    
+    top_startvend_df <- top_startvend_df %>%
+      # only stations which are in the top 15 start OR end will appear
+      filter(start.rank <= 15 | end.rank <= 15) %>%
+      pivot_longer(cols = !(station_id:name),
+                   names_to = "terminus",
+                   values_to = "rank") %>%
+      mutate(terminus = as.factor(terminus)) %>%
+      mutate(terminus = fct_relevel(terminus, "start.rank", "end.rank"))
+
+    p <- ggplot(top_startvend_df, aes(x = terminus,
+                                   y = rank,
+                                   group = station_id)) +
+      geom_line_interactive(aes(tooltip = glue("Station ID#: {station_id}<br/>",
+                                               "Station Name: {name}<br/>"),
+                                data_id = station_id), size = 1.2,
+                            alpha = 0.6) +
+      geom_point_interactive(aes(tooltip = glue("Station ID#: {station_id}<br/>",
+                                                "Station Name: {name}<br/>",
+                                                "Rank: {rank}"),
+                                 data_id = station_id)) +
+      labs(x = "",
+           y = "Rank (# of Trips)") +
+      scale_x_discrete(expand = c(0.01,0.01),
+                       labels = c("Start Station", "End Station")) +
+      scale_y_reverse(limits = c(max(top_startvend_df$rank), 1),
+                      expand = c(0,1),
+                      breaks = c(1,seq(5,40, 5)),
+                      sec.axis = sec_axis(trans = ~.,
+                                          breaks = c(1,seq(5,40, 5)))) +
+      theme_minimal() +
+      theme(plot.margin = margin(5,15,5,5))
+
+    girafe(ggobj = p,
+           options = list(
+             opts_hover_inv(css = "stroke-width:1;opacity:0.4"),
+             opts_hover(css = "stroke-width:4;opacity:1")
+           ))
   })
   
 }
