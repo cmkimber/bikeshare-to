@@ -309,6 +309,8 @@ server <- function(input, output, session){
     updateSelectizeInput(session,
                          inputId = "select_station",
                          selected = selected_station())
+    
+    session$sendCustomMessage(type = "slopegraph_set", message = selected_station())
   })
   
   # sync selected station from inputs to the reactive value
@@ -334,6 +336,10 @@ server <- function(input, output, session){
   
   observeEvent(input$select_station, {
     selected_station(input$select_station)
+  })
+  
+  observeEvent(input$slopegraph_selected, {
+    selected_station(input$slopegraph_selected)
   })
   
   # wipe the selected station reactive when the input data (and thus the map) changes, otherwise the currently selected station cannot be selected again on the map until the selected station value is changed
@@ -435,7 +441,9 @@ server <- function(input, output, session){
     girafe(ggobj = p,
            options = list(
              opts_hover_inv(css = "stroke-width:1;opacity:0.4"),
-             opts_hover(css = "stroke-width:4;opacity:1")
+             opts_hover(css = "stroke-width:4;opacity:1"),
+             opts_selection(type = "single",
+                            css = "stroke-width:4;opacity:1;stroke:red")
            ))
   })
   
