@@ -1,6 +1,7 @@
 library(tidyverse)
 library(sf)
 library(shiny)
+library(bslib)
 library(leaflet)
 library(ggiraph)
 library(DT)
@@ -35,27 +36,26 @@ get_station_rank_popup <- function(station_row){
   return(popup_text)
 }
 
-ui <- fluidPage(
+ui <- page_fluid(
   titlePanel(
-    "Title Here"
+    "Starting vs. Ending Station Use by Month"
   ),
-  fluidRow(
-    column(6,
-           helpText("Lorem ipsum etc"))
+  layout_columns(
+    card(helpText("Lorem ipsum etc")),
+    col_widths = c(6, -6)
   ),
-  fluidRow(
-    column(6,
-      radioButtons("year_vs_month",
+  layout_columns(
+    card(radioButtons("year_vs_month",
                    "Time Period to Display:",
                    choices = c("Yearly", "Monthly"),
                    selected = "Yearly"),
-      selectInput("select_month",
+         selectInput("select_month",
                   "Month to Display:",
                   choices = NULL,
                   selected = NULL,
                   selectize = FALSE)
       ),
-    column(6,
+    card( 
       # note selectize is used here with multiple selections enabled and a max number of selections of 1 to facilitate having the app initialize with no station selected
       selectizeInput("select_station",
                   "Choose Station:",
@@ -66,19 +66,31 @@ ui <- fluidPage(
       checkboxInput("filter_top_stations",
                     "Display Top 15 Stations Only",
                     value = FALSE)
-    )
+    ),
+    col_widths = c(6,6)
   ),
-  fluidRow(
-    column(6,
-           leafletOutput("top_start_stations"),
-           DTOutput("top_15_start_stations")
-           ),
-    column(6,
-           leafletOutput("top_end_stations"),
-           DTOutput("top_15_end_stations")
-           )
+  layout_columns(
+    card(card_header("Top Starting Stations"),
+         leafletOutput("top_start_stations")),
+    card(card_header("Top Ending Stations"),
+         leafletOutput("top_end_stations"))
   ),
-  fluidRow(
+  layout_columns(
+    accordion(
+      accordion_panel(
+        title = "Top 15 Starting Stations",
+        DTOutput("top_15_start_stations")
+      )
+    ),
+    accordion(
+      accordion_panel(
+        title = "Top 15 Ending Stations",
+        DTOutput("top_15_end_stations")
+      )
+    ),
+    col_widths = c(6,6)
+  ),
+  card(
     girafeOutput("slopegraph")
   )
 )
