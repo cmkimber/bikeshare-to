@@ -39,8 +39,12 @@ ui <- fluidPage(
   titlePanel(
     "Title Here"
   ),
-  sidebarLayout(
-    sidebarPanel(
+  fluidRow(
+    column(6,
+           helpText("Lorem ipsum etc"))
+  ),
+  fluidRow(
+    column(6,
       radioButtons("year_vs_month",
                    "Time Period to Display:",
                    choices = c("Yearly", "Monthly"),
@@ -49,7 +53,9 @@ ui <- fluidPage(
                   "Month to Display:",
                   choices = NULL,
                   selected = NULL,
-                  selectize = FALSE),
+                  selectize = FALSE)
+      ),
+    column(6,
       # note selectize is used here with multiple selections enabled and a max number of selections of 1 to facilitate having the app initialize with no station selected
       selectizeInput("select_station",
                   "Choose Station:",
@@ -60,22 +66,20 @@ ui <- fluidPage(
       checkboxInput("filter_top_stations",
                     "Display Top 15 Stations Only",
                     value = FALSE)
-      ),
-    mainPanel(
-      fluidRow(
-        column(6,
-               leafletOutput("top_start_stations"),
-               DTOutput("top_15_start_stations")
-               ),
-        column(6,
-               leafletOutput("top_end_stations"),
-               DTOutput("top_15_end_stations")
-               )
-      ),
-      fluidRow(
-        girafeOutput("slopegraph")
-      )
     )
+  ),
+  fluidRow(
+    column(6,
+           leafletOutput("top_start_stations"),
+           DTOutput("top_15_start_stations")
+           ),
+    column(6,
+           leafletOutput("top_end_stations"),
+           DTOutput("top_15_end_stations")
+           )
+  ),
+  fluidRow(
+    girafeOutput("slopegraph")
   )
 )
 
