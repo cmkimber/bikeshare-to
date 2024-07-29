@@ -81,11 +81,15 @@ ui <- page_fluid(
       layout_columns(
         card(card_header("Top 15 Starting Stations"),
              card_body(DTOutput("top_15_start_stations"),
-                       min_height = "1000px")
+                       min_height = "600px"
+                       # max_height = "1100px"
+                       )
         ),
         card(card_header("Top 15 Ending Stations"),
              card_body(DTOutput("top_15_end_stations"),
-                       min_height = "1000px")
+                       min_height = "600px"
+                       # max_height = "1100px"
+                       )
         ),
         col_widths = c(6,6)
       )
