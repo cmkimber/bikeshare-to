@@ -77,7 +77,7 @@ ui <- page_fluid(
   ),
   accordion(
     accordion_panel(
-      title = "Placeholder",
+      title = "Top Station Tables",
       layout_columns(
         card(card_header("Top 15 Starting Stations"),
              card_body(DTOutput("top_15_start_stations"),
@@ -92,6 +92,7 @@ ui <- page_fluid(
     )
   ),
   card(
+    card_header("Compare Starting vs. Ending Station Rank"),
     girafeOutput("slopegraph")
   )
 )
@@ -417,7 +418,7 @@ server <- function(input, output, session){
               options = list(dom = "t",
                              searching = FALSE,
                              pageLength = 15),
-              colnames = c("Station ID", "Location", "# of Rides Started"))
+              colnames = c("Station ID", "Location", "# of Rides Ended"))
   })
   
   output$slopegraph <- renderGirafe({
