@@ -75,20 +75,21 @@ ui <- page_fluid(
     card(card_header("Top Ending Stations"),
          leafletOutput("top_end_stations"))
   ),
-  layout_columns(
-    accordion(
-      accordion_panel(
-        title = "Top 15 Starting Stations",
-        DTOutput("top_15_start_stations")
+  accordion(
+    accordion_panel(
+      title = "Placeholder",
+      layout_columns(
+        card(card_header("Top 15 Starting Stations"),
+             card_body(DTOutput("top_15_start_stations"),
+                       min_height = "1000px")
+        ),
+        card(card_header("Top 15 Ending Stations"),
+             card_body(DTOutput("top_15_end_stations"),
+                       min_height = "1000px")
+        ),
+        col_widths = c(6,6)
       )
-    ),
-    accordion(
-      accordion_panel(
-        title = "Top 15 Ending Stations",
-        DTOutput("top_15_end_stations")
-      )
-    ),
-    col_widths = c(6,6)
+    )
   ),
   card(
     girafeOutput("slopegraph")
@@ -393,6 +394,9 @@ server <- function(input, output, session){
     datatable(top_15_start_stations_df,
               selection = "single",
               rownames = FALSE,
+              fillContainer = TRUE,
+              # height = "100%",
+              # style = "bootstrap4",
               options = list(dom = "t",
                              searching = FALSE,
                              pageLength = 15),
@@ -407,6 +411,9 @@ server <- function(input, output, session){
     datatable(top_15_end_stations_df,
               selection = "single",
               rownames = FALSE,
+              fillContainer = TRUE,
+              # height = "100%",
+              # style = "bootstrap4",
               options = list(dom = "t",
                              searching = FALSE,
                              pageLength = 15),
