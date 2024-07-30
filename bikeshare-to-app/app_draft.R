@@ -58,23 +58,40 @@ theme_bikeshare <- function(){
 
 zis_colours <- wes_palette("Zissou1", type = "discrete")
 
-rides_2022_daily_sum <- rides_2022_sf %>% group_by(Usemaxr.Type) %>% count(date = date(Start.Time)) %>% bind_rows(rides_2022_sf %>% group_by(date = date(Start.Time)) %>% count() %>% mutate(User.Type = "Total"))
+rides_2022_daily_sum <- rides_2022_sf %>% group_by(User.Type) %>% count(date = date(Start.Time)) %>% bind_rows(rides_2022_sf %>% group_by(date = date(Start.Time)) %>% count() %>% mutate(User.Type = "Total"))
 
-ui <- fluidPage(
-  fluidRow(align = "center",
-           sliderInput("date_slider",
-                       "Select Date:",
-                       min = min(date(rides_2022_sf$Start.Time)),
-                       max = max(date(rides_2022_sf$Start.Time)),
-                       value = min(date(rides_2022_sf$Start.Time)),
-                       step = 1,
-                       animate = animationOptions(interval = 3000),
-                       width = "90%")),
-  leafletOutput("time_series_heatmap"),
-  plotOutput("daily_rides")
+ui <- page_fluid(
+  layout_columns(
+    card(titlePanel("Trip Numbers By Date")),
+    card(actionButton("help_1",
+                      "Help")),
+    col_widths = c(6,-3,3)
+  ),
+  card(card_header("Select Date:"),
+       card_body(class = "align-items-center",
+                 sliderInput("date_slider",
+                              NULL,
+                              min = min(date(rides_2022_sf$Start.Time)),
+                              max = max(date(rides_2022_sf$Start.Time)),
+                              value = min(date(rides_2022_sf$Start.Time)),
+                              step = 1,
+                              animate = animationOptions(interval = 3000),
+                              width = "90%"))
+       ),
+  card(card_header("Trip Start Density"),
+       leafletOutput("time_series_heatmap")),
+  card(plotOutput("daily_rides"))
 )
 
 server <- function(input, output, session){
+  
+  observeEvent(input$help_1, {
+    showModal(modalDialog(
+      title = "How this pane works",
+      HTML("This pane shows data on the number of trips made per day throughout 2022. The date can be chosen on the slider at the top; by clicking the play/pause button on the slider the visualization can be animated.<br><br>
+           The heatmap shows the spatial distribution of trips (based on starting station location) while the bar plot below provides the total number of trips associated with the heatmap, segmented by User Type.")
+    ))
+  })
   
   filtered_data <- reactive({
     req(input$date_slider)
