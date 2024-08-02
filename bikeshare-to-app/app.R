@@ -103,7 +103,7 @@ ui <- page_fluid(
   navset_tab(
     nav_panel(title = "Pane 1",
               layout_columns(
-                card(titlePanel("Trip Numbers By Date")),
+                card(titlePanel("Trip Numbers by Date")),
                 card(actionButton("help_1",
                                   "Help")),
                 col_widths = c(6,-3,3)
@@ -119,9 +119,16 @@ ui <- page_fluid(
                                          animate = animationOptions(interval = 3000),
                                          width = "90%"))
               ),
-              card(card_header("Trip Start Density"),
-                   leafletOutput("time_series_heatmap")),
-              card(plotOutput("daily_rides"))
+              layout_column_wrap(
+                width = "500px",
+                card(card_header("Trip Start Density"),
+                     leafletOutput("time_series_heatmap")),
+                card(card_header("Daily Trip Count"),
+                     card_body(plotOutput("daily_rides",
+                                          width = "600px"),
+                               class = "align-items-center")
+                )
+              )
               ),
     nav_panel(title = "Pane 2",
               titlePanel(
