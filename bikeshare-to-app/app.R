@@ -548,12 +548,14 @@ server <- function(input, output, session){
       addTiles() %>%
       setView(lng = -79.38, lat = 43.65, zoom = 11)
   })
+  outputOptions(output, "top_start_stations", suspendWhenHidden = FALSE)
   
   output$top_end_stations <- renderLeaflet({
     leaflet() %>%
       addTiles() %>%
       setView(lng = -79.38, lat = 43.65, zoom = 11)
   })
+  outputOptions(output, "top_end_stations", suspendWhenHidden = FALSE)
   
   output$top_15_start_stations <- renderDT({
     # NOTE the df must already be arranged, not arranged in the slice_head call, otherwise the original df cannot be filtered by row index to set the reactive element
@@ -640,6 +642,6 @@ server <- function(input, output, session){
   })
 }
 
-#### RUN APP ---
+#### RUN APP ----
 
 shinyApp(ui = ui, server = server)
