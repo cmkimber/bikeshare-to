@@ -131,20 +131,23 @@ ui <- page_fluid(
               )
               ),
     nav_panel(title = "Pane 2",
-              titlePanel(
-                "Starting vs. Ending Station Use by Month"
+              layout_columns(
+                card(titlePanel("Starting vs. Ending Station Use by Month")),
+                card(actionButton("help_2",
+                                  "Help")),
+                col_widths = c(9,3)
               ),
-              accordion(
-                open = FALSE,
-                accordion_panel(
-                  "Click for Help",
-                  layout_columns(
-                    card(helpText("Explore the most popular stations to start and end Bike Share Toronto trips at during 2022 using this pane. The controls below can be used to select full year or monthly data, choose the month of interest, or search for a particular station. The tick box to display the top 15 stations will restrict the maps to showing the most popular stations; these 15 stations match those shown in the tables below, which can be expanded or hidden.")),
-                    card(helpText("A station can also be selected by clicking a point in the map or row in a table. The slopegraph at the bottom of the page compares the relative popularity of stations for starting or ending trips in the selected time period. The slopegraph shows all stations which are in the top 15 in popularity for either starting or ending trips during the time period selected. A station can also be selected by clicking on the slopegraph itself.")),
-                    col_widths = c(6, 6)
-                  )
-                )
-              ),
+              # accordion(
+              #   open = FALSE,
+              #   accordion_panel(
+              #     "Click for Help",
+              #     layout_columns(
+              #       card(helpText("Explore the most popular stations to start and end Bike Share Toronto trips at during 2022 using this pane. The controls below can be used to select full year or monthly data, choose the month of interest, or search for a particular station. The tick box to display the top 15 stations will restrict the maps to showing the most popular stations; these 15 stations match those shown in the tables below, which can be expanded or hidden.")),
+              #       card(helpText("A station can also be selected by clicking a point in the map or row in a table. The slopegraph at the bottom of the page compares the relative popularity of stations for starting or ending trips in the selected time period. The slopegraph shows all stations which are in the top 15 in popularity for either starting or ending trips during the time period selected. A station can also be selected by clicking on the slopegraph itself.")),
+              #       col_widths = c(6, 6)
+              #     )
+              #   )
+              # ),
               layout_columns(
                 card(radioButtons("year_vs_month",
                                   "Time Period to Display:",
@@ -267,6 +270,15 @@ server <- function(input, output, session){
   })
   
   ### PANE 2 SERVER CONTENTS ----
+  
+  observeEvent(input$help_2, {
+    showModal(modalDialog(
+      title = "How this pane works",
+      HTML("Explore the most popular stations to start and end Bike Share Toronto trips at during 2022 using this pane. The controls below can be used to select full year or monthly data, choose the month of interest, or search for a particular station. The tick box to display the top 15 stations will restrict the maps to showing the most popular stations; these 15 stations match those shown in the tables below, which can be expanded or hidden.<br><br>
+           A station can also be selected by clicking a point in the map or row in a table. The slopegraph at the bottom of the page compares the relative popularity of stations for starting or ending trips in the selected time period. The slopegraph shows all stations which are in the top 15 in popularity for either starting or ending trips during the time period selected. A station can also be selected by clicking on the slopegraph itself.")
+    ))
+  })
+  
   # an empty reactive value to hold the data on  stations filtered by time period
   top_start_stations_df <- reactiveVal(value = NULL)
   top_end_stations_df <- reactiveVal(value = NULL)
