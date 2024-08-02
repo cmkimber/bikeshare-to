@@ -16,7 +16,7 @@
   - Visualization 1 is a heatmap showing trip starting stations for a given day, built using Leaflet
   - Visualization 2 is a barplot showing the number of trips for a given day by user type, built using ggplot2
 * Pane 2 displays the most popular starting and ending stations for trips in a given time period (yearly or monthly)
-  - Visualization 1 is a pair of Leaflet maps with X markers showing each station's relative use as a starting or ending point for trips
+  - Visualization 1 is a pair of Leaflet maps with colour-gradient markers showing each station's relative use as a starting or ending point for trips
   - Visualization 2 is a pair of Data Table tables that show the top 15 starting and ending stations
   - Visualization 3 is a slopegraph showing the relationship in popularity for starting and ending trips for the top 15 stations, built with ggiraph
   - Information on a given station can be obtained by interacting with any visualization or with a dropdown input
