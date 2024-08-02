@@ -368,7 +368,11 @@ server <- function(input, output, session){
                                         fillColor = ~pal_ride_num(top_start_stations_df()$n),
                                         fillOpacity = 0.8,
                                         data = top_start_stations_df(),
-                                        group = "start_stations")
+                                        group = "start_stations") %>%
+                       addLegend(pal = pal_ride_num,
+                                 values = top_start_stations_df()$n,
+                                 group = "start_stations",
+                                 position = "bottomright")
                      
                      leafletProxy("top_end_stations") %>%
                        clearGroup("station_popup") %>%
@@ -386,7 +390,11 @@ server <- function(input, output, session){
                                         fillColor = ~pal_ride_num(top_end_stations_df()$n),
                                         fillOpacity = 0.8,
                                         data = top_end_stations_df(),
-                                        group = "end_stations")
+                                        group = "end_stations") %>%
+                       addLegend(pal = pal_ride_num,
+                                 values = top_end_stations_df()$n,
+                                 group = "end_stations",
+                                 position = "bottomright")
                    }
                    else if (input$filter_top_stations == TRUE) {
                      filtered_top_start_stations <- top_start_stations_df() %>%
@@ -411,7 +419,11 @@ server <- function(input, output, session){
                                         fillColor = ~filtered_palette(filtered_top_start_stations$n),
                                         fillOpacity = 0.8,
                                         data = top_start_stations_df(),
-                                        group = "start_stations")
+                                        group = "start_stations") %>%
+                       addLegend(pal = filtered_palette,
+                                 values = top_start_stations_df()$n,
+                                 group = "start_stations",
+                                 position = "bottomright")
                      
                      filtered_top_end_stations <- top_end_stations_df() %>%
                        slice_head(n = 15)
@@ -435,7 +447,11 @@ server <- function(input, output, session){
                                         fillColor = ~filtered_palette_2(filtered_top_end_stations$n),
                                         fillOpacity = 0.8,
                                         data = top_end_stations_df(),
-                                        group = "end_stations")
+                                        group = "end_stations") %>%
+                       addLegend(pal = filtered_palette_2,
+                                 values = top_end_stations_df()$n,
+                                 group = "end_stations",
+                                 position = "bottomright")
                    }      
                  })
   
