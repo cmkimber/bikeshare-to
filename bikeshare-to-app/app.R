@@ -629,7 +629,7 @@ server <- function(input, output, session){
                       breaks = c(1,seq(5,40, 5)),
                       sec.axis = sec_axis(trans = ~.,
                                           breaks = c(1,seq(5,40, 5)))) +
-      theme_minimal() +
+      theme_bikeshare() +
       theme(plot.margin = margin(5,15,5,5))
     
     girafe(ggobj = p,
