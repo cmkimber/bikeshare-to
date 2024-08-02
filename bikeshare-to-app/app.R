@@ -99,102 +99,102 @@ get_station_rank_popup <- function(station_row){
 
 #### BUILD UI ----
 
-ui <- page_navbar(
-  title = "Placeholder",
-  nav_panel(title = "Pane 1",
-            layout_columns(
-              card(titlePanel("Trip Numbers By Date")),
-              card(actionButton("help_1",
-                                "Help")),
-              col_widths = c(6,-3,3)
-            ),
-            card(card_header("Select Date:"),
-                 card_body(class = "align-items-center",
-                           sliderInput("date_slider",
-                                       NULL,
-                                       min = min(date(rides_2022_sf$Start.Time)),
-                                       max = max(date(rides_2022_sf$Start.Time)),
-                                       value = min(date(rides_2022_sf$Start.Time)),
-                                       step = 1,
-                                       animate = animationOptions(interval = 3000),
-                                       width = "90%"))
-            ),
-            card(card_header("Trip Start Density"),
-                 leafletOutput("time_series_heatmap")),
-            card(plotOutput("daily_rides"))
-            ),
-  nav_panel(title = "Pane 2",
-            titlePanel(
-              "Starting vs. Ending Station Use by Month"
-            ),
-            accordion(
-              open = FALSE,
-              accordion_panel(
-                "Click for Help",
-                layout_columns(
-                  card(helpText("Explore the most popular stations to start and end Bike Share Toronto trips at during 2022 using this pane. The controls below can be used to select full year or monthly data, choose the month of interest, or search for a particular station. The tick box to display the top 15 stations will restrict the maps to showing the most popular stations; these 15 stations match those shown in the tables below, which can be expanded or hidden.")),
-                  card(helpText("A station can also be selected by clicking a point in the map or row in a table. The slopegraph at the bottom of the page compares the relative popularity of stations for starting or ending trips in the selected time period. The slopegraph shows all stations which are in the top 15 in popularity for either starting or ending trips during the time period selected. A station can also be selected by clicking on the slopegraph itself.")),
-                  col_widths = c(6, 6)
-                )
-              )
-            ),
-            layout_columns(
-              card(radioButtons("year_vs_month",
-                                "Time Period to Display:",
-                                choices = c("Yearly", "Monthly"),
-                                selected = "Yearly"),
-                   selectInput("select_month",
-                               "Month to Display:",
-                               choices = NULL,
-                               selected = NULL,
-                               selectize = FALSE)
+ui <- page_fluid(
+  navset_tab(
+    nav_panel(title = "Pane 1",
+              layout_columns(
+                card(titlePanel("Trip Numbers By Date")),
+                card(actionButton("help_1",
+                                  "Help")),
+                col_widths = c(6,-3,3)
               ),
-              card( 
-                # note selectize is used here with multiple selections enabled and a max number of selections of 1 to facilitate having the app initialize with no station selected
-                selectizeInput("select_station",
-                               "Choose Station:",
-                               choices = station_choices,
-                               multiple = TRUE,
-                               selected = NULL,
-                               options = list(maxItems = 1)),
-                checkboxInput("filter_top_stations",
-                              "Display Top 15 Stations Only",
-                              value = FALSE)
+              card(card_header("Select Date:"),
+                   card_body(class = "align-items-center",
+                             sliderInput("date_slider",
+                                         NULL,
+                                         min = min(date(rides_2022_sf$Start.Time)),
+                                         max = max(date(rides_2022_sf$Start.Time)),
+                                         value = min(date(rides_2022_sf$Start.Time)),
+                                         step = 1,
+                                         animate = animationOptions(interval = 3000),
+                                         width = "90%"))
               ),
-              col_widths = c(6,6)
-            ),
-            layout_columns(
-              card(card_header("Top Starting Stations"),
-                   leafletOutput("top_start_stations")),
-              card(card_header("Top Ending Stations"),
-                   leafletOutput("top_end_stations"))
-            ),
-            accordion(
-              accordion_panel(
-                title = "Top Station Tables",
-                layout_columns(
-                  card(card_header("Top 15 Starting Stations"),
-                       card_body(DTOutput("top_15_start_stations"),
-                                 min_height = "600px"
-                                 # max_height = "1100px"
-                       )
-                  ),
-                  card(card_header("Top 15 Ending Stations"),
-                       card_body(DTOutput("top_15_end_stations"),
-                                 min_height = "600px"
-                                 # max_height = "1100px"
-                       )
-                  ),
-                  col_widths = c(6,6)
+              card(card_header("Trip Start Density"),
+                   leafletOutput("time_series_heatmap")),
+              card(plotOutput("daily_rides"))
+              ),
+    nav_panel(title = "Pane 2",
+              titlePanel(
+                "Starting vs. Ending Station Use by Month"
+              ),
+              accordion(
+                open = FALSE,
+                accordion_panel(
+                  "Click for Help",
+                  layout_columns(
+                    card(helpText("Explore the most popular stations to start and end Bike Share Toronto trips at during 2022 using this pane. The controls below can be used to select full year or monthly data, choose the month of interest, or search for a particular station. The tick box to display the top 15 stations will restrict the maps to showing the most popular stations; these 15 stations match those shown in the tables below, which can be expanded or hidden.")),
+                    card(helpText("A station can also be selected by clicking a point in the map or row in a table. The slopegraph at the bottom of the page compares the relative popularity of stations for starting or ending trips in the selected time period. The slopegraph shows all stations which are in the top 15 in popularity for either starting or ending trips during the time period selected. A station can also be selected by clicking on the slopegraph itself.")),
+                    col_widths = c(6, 6)
+                  )
                 )
+              ),
+              layout_columns(
+                card(radioButtons("year_vs_month",
+                                  "Time Period to Display:",
+                                  choices = c("Yearly", "Monthly"),
+                                  selected = "Yearly"),
+                     selectInput("select_month",
+                                 "Month to Display:",
+                                 choices = NULL,
+                                 selected = NULL,
+                                 selectize = FALSE)
+                ),
+                card( 
+                  # note selectize is used here with multiple selections enabled and a max number of selections of 1 to facilitate having the app initialize with no station selected
+                  selectizeInput("select_station",
+                                 "Choose Station:",
+                                 choices = station_choices,
+                                 multiple = TRUE,
+                                 selected = NULL,
+                                 options = list(maxItems = 1)),
+                  checkboxInput("filter_top_stations",
+                                "Display Top 15 Stations Only",
+                                value = FALSE)
+                ),
+                col_widths = c(6,6)
+              ),
+              layout_columns(
+                card(card_header("Top Starting Stations"),
+                     leafletOutput("top_start_stations")),
+                card(card_header("Top Ending Stations"),
+                     leafletOutput("top_end_stations"))
+              ),
+              accordion(
+                accordion_panel(
+                  title = "Top Station Tables",
+                  layout_columns(
+                    card(card_header("Top 15 Starting Stations"),
+                         card_body(DTOutput("top_15_start_stations"),
+                                   min_height = "600px"
+                                   # max_height = "1100px"
+                         )
+                    ),
+                    card(card_header("Top 15 Ending Stations"),
+                         card_body(DTOutput("top_15_end_stations"),
+                                   min_height = "600px"
+                                   # max_height = "1100px"
+                         )
+                    ),
+                    col_widths = c(6,6)
+                  )
+                )
+              ),
+              card(
+                card_header("Compare Starting vs. Ending Station Rank"),
+                girafeOutput("slopegraph")
               )
-            ),
-            card(
-              card_header("Compare Starting vs. Ending Station Rank"),
-              girafeOutput("slopegraph")
-            )
+      )
     )
-  )
 )
 
 #### BUILD SERVER ----
@@ -632,5 +632,7 @@ server <- function(input, output, session){
            ))
   })
 }
+
+#### RUN APP ---
 
 shinyApp(ui = ui, server = server)
