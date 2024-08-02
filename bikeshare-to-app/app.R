@@ -356,6 +356,7 @@ server <- function(input, output, session){
                        clearGroup("station_popup") %>%
                        clearGroup("highlighted_start_station") %>%
                        clearGroup("start_stations") %>%
+                       clearControls() %>%
                        addCircleMarkers(layerId = ~top_start_stations_df()$station_id,
                                         lng = st_coordinates(top_start_stations_df() %>%
                                                                pull(geometry))[,1],
@@ -378,6 +379,7 @@ server <- function(input, output, session){
                        clearGroup("station_popup") %>%
                        clearGroup("highlighted_end_station") %>%
                        clearGroup("end_stations") %>%
+                       clearControls() %>%
                        addCircleMarkers(layerId = ~top_end_stations_df()$station_id,
                                         lng = st_coordinates(top_end_stations_df() %>%
                                                                pull(geometry))[,1],
@@ -407,6 +409,7 @@ server <- function(input, output, session){
                        clearGroup("station_popup") %>%
                        clearGroup("highlighted_start_station") %>%
                        clearGroup("start_stations") %>%
+                       clearControls() %>%
                        addCircleMarkers(layerId = ~filtered_top_start_stations$station_id,
                                         lng = st_coordinates(filtered_top_start_stations %>%
                                                                pull(geometry))[,1],
@@ -435,6 +438,7 @@ server <- function(input, output, session){
                        clearGroup("station_popup") %>%
                        clearGroup("highlighted_end_station") %>%
                        clearGroup("end_stations") %>%
+                       clearControls() %>%
                        addCircleMarkers(layerId = ~filtered_top_end_stations$station_id,
                                         lng = st_coordinates(filtered_top_end_stations %>%
                                                                pull(geometry))[,1],
