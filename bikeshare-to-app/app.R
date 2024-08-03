@@ -101,7 +101,7 @@ get_station_rank_popup <- function(station_row){
 
 ui <- page_fluid(
   navset_tab(
-    nav_panel(title = "Pane 1",
+    nav_panel(title = "Daily Trips",
               layout_columns(
                 card(titlePanel("Trip Numbers by Date")),
                 card(actionButton("help_1",
@@ -130,7 +130,7 @@ ui <- page_fluid(
                 )
               )
               ),
-    nav_panel(title = "Pane 2",
+    nav_panel(title = "Top Stations",
               layout_columns(
                 card(titlePanel("Starting vs. Ending Station Use by Month")),
                 card(actionButton("help_2",
