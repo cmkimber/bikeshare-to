@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.2
+
+### Added or Changed
+
+* Added legends to the maps on pane 2
+  - Legends are dynamically updated when the time period displayed on the map changes
+* Moved the help text on pane 2 from an accordion element at the top of the pane to a modal help button
+* Updated pane 2 slopegraph theme to match ggplot2 theme developed for the rest of the project
+
 ## v1.0.1
 
 ### Added or Changed
