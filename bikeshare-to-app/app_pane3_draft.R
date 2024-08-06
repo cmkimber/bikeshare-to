@@ -11,7 +11,7 @@ stations_update_2022_sf <- readRDS("./Data/stations_update_2022_sf.rds")
 io_yearly <- rides_2022_sf %>%
   count(Start.Station.Id) %>%
   rename(Start.Count = n) %>%
-  left_join(rides_2022_sf %>%
+  full_join(rides_2022_sf %>%
               count(End.Station.Id) %>%
               rename(End.Count = n),
             by = join_by(Start.Station.Id == End.Station.Id)) %>%
