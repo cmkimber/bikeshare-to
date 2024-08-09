@@ -59,13 +59,14 @@ get_io_popup <- function(station_row){
     ggplot(aes(x = n, y = Terminus, fill = Terminus)) +
     geom_col() +
     labs(title = glue("Station ID: {station_row$station_id}"),
-         subtitle = station_row$name,
+         subtitle = str_wrap(station_row$name, width = 40),
          x = "# of Trips",
          y = "Terminus") + 
     scale_y_discrete(labels = c("End", "Start")) +
     scale_fill_manual(values = alpha(io_plot_colors, 0.8)) + 
     theme_minimal() + 
     theme(legend.position = "none",
+          plot.title = element_text(size = 10),
           plot.subtitle = element_text(size = 8))
   
   svg(filename = paste(popup_folder, "io_plot.svg", sep = "/"),
