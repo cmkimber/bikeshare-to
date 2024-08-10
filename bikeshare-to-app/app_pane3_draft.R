@@ -5,23 +5,12 @@ library(bslib)
 library(leaflet)
 library(RColorBrewer)
 library(glue)
-library(leafpop)
 
 rides_2022_sf <- readRDS("./Data/rides_2022_sf.rds")
 stations_update_2022_sf <- readRDS("./Data/stations_update_2022_sf.rds")
 
-io_yearly <- rides_2022_sf %>%
-  count(Start.Station.Id) %>%
-  rename(Start.Count = n) %>%
-  full_join(rides_2022_sf %>%
-              count(End.Station.Id) %>%
-              rename(End.Count = n),
-            by = join_by(Start.Station.Id == End.Station.Id)) %>%
-  mutate(IO.Ratio = Start.Count/End.Count) %>%
-  left_join(stations_update_2022_sf,
-            by = join_by(Start.Station.Id == station_id)) %>%
-  select(Start.Station.Id:name, geometry) %>%
-  rename(station_id = Start.Station.Id)
+month_values <- seq(1,12,1)
+names(month_values) <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
 # set scale range for the IO ratio to be symmetrical about 1 to make a diverging palette that is white at 1
 io_scale_range <- c(0,2)
@@ -42,13 +31,6 @@ pal_io <- function(x){
                  )
          )
 }
-
-# get_io_popup_text <- function(station_row){
-#   popup_text <- glue(
-#     "Station ID: {station_row$station_id}"
-#   )
-#   return(popup_text)
-# }
 
 popup_folder <- tempdir()
 io_plot_colors <- c(pal_io(0), pal_io(2))
@@ -84,7 +66,17 @@ ui <- page_fluid(
     card(titlePanel("Ratio of Trips Started to Ended by Station")),
     card(actionButton("help_3",
                       "Help")),
-    col_widths = c(9,3)
+    col_widths = c(9,3),
+  ),
+  card(radioButtons("year_vs_month_io",
+                    "Time Period to Display",
+                    choices = c("Yearly", "Monthly"),
+                    selected = "Yearly"),
+       selectInput("select_month_io",
+                   "Month to Display",
+                   choices = NULL,
+                   selected = NULL,
+                   selectize = FALSE)
   ),
   leafletOutput("io_map")
 )
@@ -98,40 +90,103 @@ server <- function(input, output, session){
     ))
   })
   
-  output$io_map <- renderLeaflet({
-    leaflet(data = io_yearly) %>%
-      addTiles() %>%
-      setView(lng = -79.38, lat = 43.65, zoom = 11) %>%
-      addCircleMarkers(layerId = ~io_yearly$station_id,
-                       lng = st_coordinates(io_yearly$geometry)[,1],
-                       lat = st_coordinates(io_yearly$geometry)[,2],
+  # an empty reactive value to hold the data on IO filtered by time period
+  io_input <- reactiveVal(value = NULL)
+  
+  observeEvent(input$year_vs_month_io, {
+    
+    if (input$year_vs_month_io == "Yearly"){
+      # generate dataset containing all 2022 rides
+      temp_df_io <- rides_2022_sf %>%
+        count(Start.Station.Id) %>%
+        rename(Start.Count = n) %>%
+        full_join(rides_2022_sf %>%
+                    count(End.Station.Id) %>%
+                    rename(End.Count = n),
+                  by = join_by(Start.Station.Id == End.Station.Id)) %>%
+        mutate(IO.Ratio = Start.Count/End.Count) %>%
+        left_join(stations_update_2022_sf,
+                  by = join_by(Start.Station.Id == station_id)) %>%
+        select(Start.Station.Id:name, geometry) %>%
+        rename(station_id = Start.Station.Id)
+      io_input(temp_df_io)
+      
+      # Make month select input NULL to prevent a month being chosen when yearly data displayed
+      updateSelectInput(session,
+                        "select_month_io",
+                        choices = "",
+                        selected = "")
+    }
+    
+    else if (input$year_vs_month_io == "Monthly"){
+      updateSelectInput(session,
+                        "select_month_io",
+                        choices = month_values,
+                        selected = 1)
+    }
+  })
+  
+  observeEvent(input$select_month_io, {
+    req(input$year_vs_month_io == "Monthly")
+    temp_df_io <- rides_2022_sf %>%
+      count(Start.Station.Id, Trip.Month = month(Start.Time)) %>%
+      rename(Start.Count = n) %>%
+      full_join(rides_2022_sf %>%
+                  count(End.Station.Id, Trip.Month = month(End.Time)) %>%
+                  rename(End.Count = n),
+                by = join_by(Start.Station.Id == End.Station.Id,
+                             Trip.Month)) %>%
+      mutate(IO.Ratio = Start.Count/End.Count) %>%
+      left_join(stations_update_2022_sf,
+                by = join_by(Start.Station.Id == station_id)) %>%
+      select(Start.Station.Id:name, geometry) %>%
+      rename(station_id = Start.Station.Id) %>%
+      filter(Trip.Month == input$select_month_io)
+    io_input(temp_df_io)
+  })
+  
+  observeEvent(io_input(), {
+    leafletProxy("io_map") %>%
+      clearGroup("io_stations") %>%
+      clearPopups() %>%
+      clearControls() %>%
+      addCircleMarkers(layerId = ~io_input()$station_id,
+                       lng = st_coordinates(io_input()$geometry)[,1],
+                       lat = st_coordinates(io_input()$geometry)[,2],
                        radius = 8, 
                        color = "black",
                        weight = 2,
                        opacity = 0.6,
-                       fillColor = ~pal_io(io_yearly$IO.Ratio),
-                       fillOpacity = 0.8) %>%
+                       fillColor = ~pal_io(io_input()$IO.Ratio),
+                       fillOpacity = 0.8,
+                       data = io_input(),
+                       group = "io_stations"
+                       ) %>%
       addLegend(colors = io_legend_colors,
                 labels = io_legend_labels,
                 opacity = 0.8,
                 title = "Placeholder",
                 position = "bottomright")
+      
   })
   
   observeEvent(input$io_map_marker_click, {
-    # io_popup_text <- io_yearly %>%
-    #   filter(station_id == input$io_map_marker_click$id) %>%
-    #   get_io_popup_text()
-    popup_content <- io_yearly %>%
+    popup_content <- io_input() %>%
       filter(station_id == input$io_map_marker_click$id) %>%
       get_io_popup()
     leafletProxy("io_map") %>%
       clearPopups() %>%
-      addPopups(data = io_yearly %>%
+      addPopups(data = io_input() %>%
                   filter(station_id == input$io_map_marker_click$id) %>%
                   pull(geometry),
-                group = "io_popups",
+                # group = "io_popups",
                 popup = popup_content) 
+  })
+  
+  output$io_map <- renderLeaflet({
+    leaflet() %>%
+      addTiles() %>%
+      setView(lng = -79.38, lat = 43.65, zoom = 11)
   })
 }
 
