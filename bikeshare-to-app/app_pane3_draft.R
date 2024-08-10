@@ -16,9 +16,6 @@ names(month_values) <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
 io_scale_range <- c(0,2)
 # pal_io_legend <- colorNumeric(palette = "RdBu",
 #                         domain = io_scale_range)
-# manually set colours for the legend because the plotted palette saturates at 2 but automatic legend will not
-io_legend_colors <- c(pal_io(0), pal_io(0.25), pal_io(0.5), pal_io(0.75), pal_io(1), pal_io(1.25), pal_io(1.5), pal_io(1.75), pal_io(2))
-io_legend_labels <- c("0", "0.25", "0.5", "0.75", "1", "1.25", "1.5", "1.75", "2")
 
 # function to saturate the IO ratio value colour at 2
 pal_io <- function(x){
@@ -31,6 +28,10 @@ pal_io <- function(x){
                  )
          )
 }
+
+# manually set colours for the legend because the plotted palette saturates at 2 but automatic legend will not
+io_legend_colors <- c(pal_io(0), pal_io(0.25), pal_io(0.5), pal_io(0.75), pal_io(1), pal_io(1.25), pal_io(1.5), pal_io(1.75), pal_io(2))
+io_legend_labels <- c("0", "0.25", "0.5", "0.75", "1", "1.25", "1.5", "1.75", "2")
 
 popup_folder <- tempdir()
 io_plot_colors <- c(pal_io(0), pal_io(2))
