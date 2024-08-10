@@ -165,7 +165,7 @@ server <- function(input, output, session){
       addLegend(colors = io_legend_colors,
                 labels = io_legend_labels,
                 opacity = 0.8,
-                title = "Placeholder",
+                title = HTML("Start to<br>End Ratio"),
                 position = "bottomright")
       
   })
