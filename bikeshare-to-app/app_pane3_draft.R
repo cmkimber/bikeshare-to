@@ -80,10 +80,23 @@ get_io_popup <- function(station_row){
 }
 
 ui <- page_fluid(
+  layout_columns(
+    card(titlePanel("Ratio of Trips Started to Ended by Station")),
+    card(actionButton("help_3",
+                      "Help")),
+    col_widths = c(9,3)
+  ),
   leafletOutput("io_map")
 )
 
 server <- function(input, output, session){
+  
+  observeEvent(input$help_3, {
+    showModal(modalDialog(
+      title = "How this pane works",
+      HTML("Lorem ipsum etc.")
+    ))
+  })
   
   output$io_map <- renderLeaflet({
     leaflet(data = io_yearly) %>%
