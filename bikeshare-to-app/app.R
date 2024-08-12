@@ -745,7 +745,9 @@ server <- function(input, output, session){
   observeEvent(input$help_3, {
     showModal(modalDialog(
       title = "How this pane works",
-      HTML("Lorem ipsum etc.")
+      HTML("See whether Bike Share Toronto stations were used as the start or end point of rides using this panel. The controls below can be used to select full year or monthly data, and to choose the month of interest in the latter case.<br><br>
+The map uses colour-coding to display the ratio of rides started to rides ended, calculated as (# trips started)/(# trips ended); a ratio greater than 1 (blue shades) means more trips were started than ended, while a ratio less than 1 (red shades) means more trips ended than started.<br><br>
+To see the data for a given station, click on the station marker on the map and view the actual number of rides started and ended in the resulting pop-up bar plot")
     ))
   })
   
