@@ -132,7 +132,7 @@ get_io_popup <- function(station_row){
          y = "Terminus") + 
     scale_y_discrete(labels = c("End", "Start")) +
     scale_fill_manual(values = alpha(io_plot_colors, 0.8)) + 
-    theme_minimal() + 
+    theme_bikeshare() + 
     theme(legend.position = "none",
           plot.title = element_text(size = 10),
           plot.subtitle = element_text(size = 8))
