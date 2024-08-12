@@ -1,5 +1,14 @@
 # Changelog
 
+## v.1.1
+
+### Added or Changed
+
+* Added pane 3 to the app
+* Pane 3 displays the ratio of trips started to trips ended by station for a given time period (yearly or monthly)
+  - This is visualized using a Leaflet map with colour-coded markers to indicate the start to end ratio (using a custom diverging palette to maintain symmetry at 1)
+  - Trips started and ended by station for the time period are displayed using bar plots in ggplot2 that are generated when a station is selected in Leaflet, converted to SVG images and rendered as custom Leaflet popups
+
 ## v1.0.2
 
 ### Added or Changed

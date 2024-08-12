@@ -29,9 +29,9 @@ _Note_: In my experience, the _renderLeaflet()_ function in Shiny did not play n
 
 ## Roadmap
 
-- [ ] Pane 1: Trip Frequency by Date w/ Heatmap
-- [ ] Pane 2: Most Popular Starting and Ending Stations
-- [ ] Pane 3: Station Departure-Arrival Ratio (Flows)
+- [X] Pane 1: Trip Frequency by Date w/ Heatmap
+- [X] Pane 2: Most Popular Starting and Ending Stations
+- [X] Pane 3: Station Departure-Arrival Ratio (Flows)
 - [ ] Additional Panes (Working Concepts)
   - [ ] Trip Frequency by User Type
   - [ ] Distribution of Trips by Time of Day
