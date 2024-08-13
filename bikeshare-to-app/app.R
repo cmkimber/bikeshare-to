@@ -150,6 +150,7 @@ get_io_popup <- function(station_row){
 #### BUILD UI ----
 
 ui <- page_fluid(
+  card(titlePanel("Bike Share Toronto 2022 Interactive Explorer")),
   navset_tab(
     nav_panel(title = "Daily Trips",
               layout_columns(
