@@ -175,9 +175,9 @@ ui <- page_fluid(
                    card_body(class = "align-items-center",
                              sliderInput("date_slider",
                                          NULL,
-                                         min = min(date(rides_2022_cleaned$Start.Time)),
-                                         max = max(date(rides_2022_cleaned$Start.Time)),
-                                         value = min(date(rides_2022_cleaned$Start.Time)),
+                                         min = as_date("2022-01-01"),
+                                         max = as_date("2022-12-31"),
+                                         value = as_date("2022-01-01"),
                                          step = 1,
                                          animate = animationOptions(interval = 3000),
                                          width = "90%"))
@@ -423,7 +423,8 @@ server <- function(input, output, session){
   observeEvent(input$select_month, {
     req(input$year_vs_month == "Monthly")
     temp_df <- rides_2022_dset %>%
-      filter(month(Start.Time) == input$select_month) %>%
+      # NOTE to get Arrow to filter by a numeric value for month from the selectInput, the value must first be escaped with "!!" and then recast as numeric again. Why? I don't know.
+      filter(month(Start.Time) == as.numeric(!!input$select_month)) %>%
       count(Start.Month = month(Start.Time), Start.Station.Id) %>%
       arrange(desc(n)) %>%
       collect() %>%
@@ -435,7 +436,7 @@ server <- function(input, output, session){
     top_start_stations_df(temp_df)
     
     temp_df2 <- rides_2022_dset %>%
-      filter(month(Start.Time) == input$select_month) %>%
+      filter(month(End.Time) == as.numeric(!!input$select_month)) %>%
       count(End.Month = month(End.Time), End.Station.Id) %>%
       arrange(desc(n)) %>%
       collect() %>%
