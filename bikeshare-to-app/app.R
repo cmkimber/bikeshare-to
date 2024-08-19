@@ -422,25 +422,27 @@ server <- function(input, output, session){
   # when monthly data is to be shown, group dataset by month and then filter for month selected
   observeEvent(input$select_month, {
     req(input$year_vs_month == "Monthly")
-    temp_df <- rides_2022_cleaned %>%
+    temp_df <- rides_2022_dset %>%
+      filter(month(Start.Time) == !!input$select_month) %>%
       count(Start.Month = month(Start.Time), Start.Station.Id) %>%
-      arrange(Start.Month, desc(n)) %>%
-      left_join(stations_update_2022_sf,
+      arrange(desc(n)) %>%
+      collect() %>%
+      left_join(select(stations_update_2022_sf,
+                       c(station_id, name, geometry)),
                 by = join_by(Start.Station.Id == station_id)) %>%
-      select(Start.Month, Start.Station.Id, n, name, geometry) %>%
       rename(station_id = Start.Station.Id) %>%
-      filter(Start.Month == input$select_month) %>%
       mutate(rank = row_number())
     top_start_stations_df(temp_df)
     
-    temp_df2 <- rides_2022_cleaned %>%
+    temp_df2 <- rides_2022_dset %>%
+      filter(month(Start.Time) == !!input$select_month) %>%
       count(End.Month = month(End.Time), End.Station.Id) %>%
-      arrange(End.Month, desc(n)) %>%
-      left_join(stations_update_2022_sf,
+      arrange(desc(n)) %>%
+      collect() %>%
+      left_join(select(stations_update_2022_sf,
+                       c(station_id, name, geometry)),
                 by = join_by(End.Station.Id == station_id)) %>%
-      select(End.Month, End.Station.Id, n, name, geometry) %>%
       rename(station_id = End.Station.Id) %>%
-      filter(End.Month == input$select_month) %>%
       mutate(rank = row_number())
     top_end_stations_df(temp_df2)  
   })
