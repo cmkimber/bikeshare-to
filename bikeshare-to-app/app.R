@@ -14,7 +14,7 @@ library(glue)
 ### LOAD APP-WIDE DATA AND FUNCTIONS ----
 
 # rides_2022_sf <- readRDS("./Data/rides_2022_sf.rds")
-rides_2022_cleaned <- readRDS("./Data/rides_2022_cleaned.rds")
+# rides_2022_cleaned <- readRDS("./Data/rides_2022_cleaned.rds")
 rides_path <- file.path("./Data/rides_2022_cleaned")
 rides_2022_dset <- open_dataset(rides_path)
 stations_update_2022_sf <- readRDS("./Data/stations_update_2022_sf.rds")
