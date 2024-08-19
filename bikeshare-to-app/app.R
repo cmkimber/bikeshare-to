@@ -371,22 +371,24 @@ server <- function(input, output, session){
   observeEvent(input$year_vs_month, {
     if (input$year_vs_month == "Yearly"){
       # generate dataset containing all 2022 rides
-      temp_df <- rides_2022_cleaned %>%
+      temp_df <- rides_2022_dset %>%
         count(Start.Station.Id) %>%
         arrange(desc(n)) %>%
-        left_join(stations_update_2022_sf,
+        collect() %>%
+        left_join(select(stations_update_2022_sf,
+                         c(station_id, name, geometry)),
                   by = join_by(Start.Station.Id == station_id)) %>%
-        select(Start.Station.Id, n, name, geometry) %>%
         rename(station_id = Start.Station.Id) %>%
         mutate(rank = row_number())
       top_start_stations_df(temp_df)
       
-      temp_df2 <- rides_2022_cleaned %>%
+      temp_df2 <- rides_2022_dset %>%
         count(End.Station.Id) %>%
         arrange(desc(n)) %>%
-        left_join(stations_update_2022_sf,
+        collect() %>%
+        left_join(select(stations_update_2022_sf,
+                         c(station_id, name, geometry)),
                   by = join_by(End.Station.Id == station_id)) %>%
-        select(End.Station.Id, n, name, geometry) %>%
         rename(station_id = End.Station.Id) %>%
         mutate(rank = row_number())
       top_end_stations_df(temp_df2)
