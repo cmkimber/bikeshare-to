@@ -1,4 +1,5 @@
 library(tidyverse)
+library(arrow)
 library(sf)
 library(shiny)
 library(bslib)
@@ -14,6 +15,8 @@ library(glue)
 
 # rides_2022_sf <- readRDS("./Data/rides_2022_sf.rds")
 rides_2022_cleaned <- readRDS("./Data/rides_2022_cleaned.rds")
+rides_path <- file.path("./Data/rides_2022_cleaned")
+rides_2022_dset <- open_dataset(rides_path)
 stations_update_2022_sf <- readRDS("./Data/stations_update_2022_sf.rds")
 
 # define month abbreviations for monthly data select input
@@ -74,7 +77,15 @@ zis_colours <- wes_palette("Zissou1", type = "discrete")
 
 ### LOAD PANE 1 DATA ----
 
-rides_2022_daily_sum <- rides_2022_cleaned %>% group_by(User.Type) %>% count(date = date(Start.Time)) %>% bind_rows(rides_2022_cleaned %>% group_by(date = date(Start.Time)) %>% count() %>% mutate(User.Type = "Total"))
+rides_2022_daily_sum <- rides_2022_dset %>%
+  group_by(User.Type) %>%
+  count(date = date(Start.Time)) %>%
+  collect() %>%
+  bind_rows(rides_2022_dset %>%
+              group_by(date = date(Start.Time)) %>%
+              count() %>%
+              mutate(User.Type = "Total") %>%
+              collect())
 
 ### LOAD PANE 2 DATA AND FUNCTIONS ----
 
@@ -292,14 +303,15 @@ server <- function(input, output, session){
   
   heatmap_data <- reactive({
     req(input$date_slider)
-    rides_2022_cleaned %>% filter(date(Start.Time) == input$date_slider) %>%
+    rides_2022_dset %>% filter(date(Start.Time) == input$date_slider) %>%
+      collect() %>%
       left_join(select(stations_update_2022_sf, c(station_id, geometry)),
                 by = join_by(Start.Station.Id == station_id),
                 relationship = "many-to-one")
   })
   
   output$time_series_heatmap <- renderLeaflet({
-    leaflet(rides_2022_cleaned) %>%
+    leaflet(rides_2022_dset %>% collect()) %>%
       addTiles() %>%
       setView(lng = -79.38, lat = 43.65, zoom = 11)
   })
