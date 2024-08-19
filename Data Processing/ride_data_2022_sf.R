@@ -9,8 +9,7 @@ rides_2022_cleaned <- data_all_years %>%
   filter(Start.Station.Id %in% stations_sf$station_id & End.Station.Id %in% stations_sf$station_id & year(Start.Time) == 2022)
 
 saveRDS(rides_2022_cleaned, "./Data/rides_2022_cleaned.rds")
-write_dataset(dataset = group_by(rides_2022_cleaned, month(Start.Time)),
-              path = "./Data/rides_2022_cleaned")
+write_dataset(rides_2022_cleaned, path = "./Data/rides_2022_cleaned")
 
 
 rides_2022_sf <- left_join(rides_2022_cleaned,
