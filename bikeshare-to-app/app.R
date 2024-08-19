@@ -423,7 +423,7 @@ server <- function(input, output, session){
   observeEvent(input$select_month, {
     req(input$year_vs_month == "Monthly")
     temp_df <- rides_2022_dset %>%
-      filter(month(Start.Time) == !!input$select_month) %>%
+      filter(month(Start.Time) == input$select_month) %>%
       count(Start.Month = month(Start.Time), Start.Station.Id) %>%
       arrange(desc(n)) %>%
       collect() %>%
@@ -435,7 +435,7 @@ server <- function(input, output, session){
     top_start_stations_df(temp_df)
     
     temp_df2 <- rides_2022_dset %>%
-      filter(month(Start.Time) == !!input$select_month) %>%
+      filter(month(Start.Time) == input$select_month) %>%
       count(End.Month = month(End.Time), End.Station.Id) %>%
       arrange(desc(n)) %>%
       collect() %>%
