@@ -1,5 +1,14 @@
 # Changelog
 
+## v.2.0
+
+### Added or Changed
+
+* Converted the application's handling of trip datafrom RDS binaries to Parquet files and Apache Arrow
+  - This change was intended to reduce the app's in-memory footprint and to make the app more responsive
+  - The in-memory footprint reduced somewhat (but not enough to run on shinyapps.io's free tier), but the application is now much more responsive with major improvements in Leaflet performance
+  - There are a few remaining quirks of the Arrow implementation ex. it does not correctly handle full joins and cannot join to a table containing an sf geometry
+
 ## v.1.1
 
 ### Added or Changed
