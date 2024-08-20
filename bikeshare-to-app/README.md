@@ -19,6 +19,7 @@ The datasets from the City of Toronto's Open Data Portal used in the web app are
 * [Jupyter Lab](https://jupyter.org/)
 * [Shiny](https://shiny.posit.co/)
 * [bslib](https://rstudio.github.io/bslib/index.html)
+* [Arrow](https://arrow.apache.org/docs/r/index.html)
 * [Leaflet](https://leafletjs.com/)
 * [Leaflet Extras](https://trafficonese.github.io/leaflet.extras/)
 * [Data Tables](https://datatables.net/)
@@ -44,8 +45,9 @@ See [Open Issues](https://github.com/cmkimber/bikeshare-to/issues) for more deta
 
 * [City of Toronto Open Data Portal](https://open.toronto.ca/)
 * [City of Toronto Open Data License](https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-licence/)
-* [shinyapps.io](https://www.shinyapps.io/)
+* [conda-forge](https://www.conda-forge.org)
 * [Mastering Shiny](https://mastering-shiny.org/index.html)
 * [ggiraph-book](https://www.ardata.fr/ggiraph-book/)
+* [Apache Arrow R Cookbook](https://arrow.apache.org/cookbook/r/index.html)
 
 [Amanda Xuereb](https://www.linkedin.com/in/amanda-xuereb-4a75139a/) kindly provided feedback on the layout and content of the application.
