@@ -13,10 +13,10 @@ In addition, there is an interactive web application in development that allows 
 
 ## Contents
 
-- Data Processing: scripts for ingesting and preprocessing data from the City of Toronto. At this point, all data importing was done in R/tidyverse.
-- Data Exploraton: scripts for identifying features of the data or patterns in the results to guide report and web application development.
-- Report 1: Ridership statistics at a yearly/monthly scale from 2017-2022. Generated using R with tidyverse and ggplot2 in Jupyter Lab.
-- Web Application (bikeshare-to-app): Ridership data from 2022 with spatial information on stations used during the rides, presented in a series of interactive graphics. Built using R/tidyverse and Shiny in RStudio, using a series of other tools delineated in the app readme. **Currently WIP**.
+- [Data Processing](/Data%20Processing): scripts for ingesting and preprocessing data from the City of Toronto. At this point, all data importing was done in R/tidyverse.
+- [Data Exploration](/Data%20Exploration): scripts for identifying features of the data or patterns in the results to guide report and web application development.
+- [Report 1](/Report%201/readme.md): Ridership statistics at a yearly/monthly scale from 2017-2022. Generated using R with tidyverse and ggplot2 in Jupyter Lab.
+- [Web Application (bikeshare-to-app)](/bikeshare-to-app): Ridership data from 2022 with spatial information on stations used during the rides, presented in a series of interactive graphics. Built using R/tidyverse and Shiny in RStudio, using a series of other tools delineated in the app readme. **Currently WIP**.
 
 ## Limitations to Public Data
 
