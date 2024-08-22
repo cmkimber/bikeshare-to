@@ -1,4 +1,5 @@
 library(tidyverse)
+library(arrow)
 library(sf)
 library(shiny)
 library(bslib)
@@ -13,7 +14,9 @@ library(glue)
 ### LOAD APP-WIDE DATA AND FUNCTIONS ----
 
 # rides_2022_sf <- readRDS("./Data/rides_2022_sf.rds")
-rides_2022_cleaned <- readRDS("./Data/rides_2022_cleaned.rds")
+# rides_2022_cleaned <- readRDS("./Data/rides_2022_cleaned.rds")
+rides_path <- file.path("./Data/rides_2022_cleaned")
+rides_2022_dset <- open_dataset(rides_path)
 stations_update_2022_sf <- readRDS("./Data/stations_update_2022_sf.rds")
 
 # define month abbreviations for monthly data select input
@@ -74,7 +77,15 @@ zis_colours <- wes_palette("Zissou1", type = "discrete")
 
 ### LOAD PANE 1 DATA ----
 
-rides_2022_daily_sum <- rides_2022_cleaned %>% group_by(User.Type) %>% count(date = date(Start.Time)) %>% bind_rows(rides_2022_cleaned %>% group_by(date = date(Start.Time)) %>% count() %>% mutate(User.Type = "Total"))
+rides_2022_daily_sum <- rides_2022_dset %>%
+  group_by(User.Type) %>%
+  count(date = date(Start.Time)) %>%
+  collect() %>%
+  bind_rows(rides_2022_dset %>%
+              group_by(date = date(Start.Time)) %>%
+              count() %>%
+              mutate(User.Type = "Total") %>%
+              collect())
 
 ### LOAD PANE 2 DATA AND FUNCTIONS ----
 
@@ -164,9 +175,9 @@ ui <- page_fluid(
                    card_body(class = "align-items-center",
                              sliderInput("date_slider",
                                          NULL,
-                                         min = min(date(rides_2022_cleaned$Start.Time)),
-                                         max = max(date(rides_2022_cleaned$Start.Time)),
-                                         value = min(date(rides_2022_cleaned$Start.Time)),
+                                         min = as_date("2022-01-01"),
+                                         max = as_date("2022-12-31"),
+                                         value = as_date("2022-01-01"),
                                          step = 1,
                                          animate = animationOptions(interval = 3000),
                                          width = "90%"))
@@ -292,14 +303,15 @@ server <- function(input, output, session){
   
   heatmap_data <- reactive({
     req(input$date_slider)
-    rides_2022_cleaned %>% filter(date(Start.Time) == input$date_slider) %>%
+    rides_2022_dset %>% filter(date(Start.Time) == input$date_slider) %>%
+      collect() %>%
       left_join(select(stations_update_2022_sf, c(station_id, geometry)),
                 by = join_by(Start.Station.Id == station_id),
                 relationship = "many-to-one")
   })
   
   output$time_series_heatmap <- renderLeaflet({
-    leaflet(rides_2022_cleaned) %>%
+    leaflet(rides_2022_dset %>% collect()) %>%
       addTiles() %>%
       setView(lng = -79.38, lat = 43.65, zoom = 11)
   })
@@ -359,22 +371,24 @@ server <- function(input, output, session){
   observeEvent(input$year_vs_month, {
     if (input$year_vs_month == "Yearly"){
       # generate dataset containing all 2022 rides
-      temp_df <- rides_2022_cleaned %>%
+      temp_df <- rides_2022_dset %>%
         count(Start.Station.Id) %>%
         arrange(desc(n)) %>%
-        left_join(stations_update_2022_sf,
+        collect() %>%
+        left_join(select(stations_update_2022_sf,
+                         c(station_id, name, geometry)),
                   by = join_by(Start.Station.Id == station_id)) %>%
-        select(Start.Station.Id, n, name, geometry) %>%
         rename(station_id = Start.Station.Id) %>%
         mutate(rank = row_number())
       top_start_stations_df(temp_df)
       
-      temp_df2 <- rides_2022_cleaned %>%
+      temp_df2 <- rides_2022_dset %>%
         count(End.Station.Id) %>%
         arrange(desc(n)) %>%
-        left_join(stations_update_2022_sf,
+        collect() %>%
+        left_join(select(stations_update_2022_sf,
+                         c(station_id, name, geometry)),
                   by = join_by(End.Station.Id == station_id)) %>%
-        select(End.Station.Id, n, name, geometry) %>%
         rename(station_id = End.Station.Id) %>%
         mutate(rank = row_number())
       top_end_stations_df(temp_df2)
@@ -408,25 +422,28 @@ server <- function(input, output, session){
   # when monthly data is to be shown, group dataset by month and then filter for month selected
   observeEvent(input$select_month, {
     req(input$year_vs_month == "Monthly")
-    temp_df <- rides_2022_cleaned %>%
+    temp_df <- rides_2022_dset %>%
+      # NOTE to get Arrow to filter by a numeric value for month from the selectInput, the value must first be escaped with "!!" and then recast as numeric again. Why? I don't know.
+      filter(month(Start.Time) == as.numeric(!!input$select_month)) %>%
       count(Start.Month = month(Start.Time), Start.Station.Id) %>%
-      arrange(Start.Month, desc(n)) %>%
-      left_join(stations_update_2022_sf,
+      arrange(desc(n)) %>%
+      collect() %>%
+      left_join(select(stations_update_2022_sf,
+                       c(station_id, name, geometry)),
                 by = join_by(Start.Station.Id == station_id)) %>%
-      select(Start.Month, Start.Station.Id, n, name, geometry) %>%
       rename(station_id = Start.Station.Id) %>%
-      filter(Start.Month == input$select_month) %>%
       mutate(rank = row_number())
     top_start_stations_df(temp_df)
     
-    temp_df2 <- rides_2022_cleaned %>%
+    temp_df2 <- rides_2022_dset %>%
+      filter(month(End.Time) == as.numeric(!!input$select_month)) %>%
       count(End.Month = month(End.Time), End.Station.Id) %>%
-      arrange(End.Month, desc(n)) %>%
-      left_join(stations_update_2022_sf,
+      arrange(desc(n)) %>%
+      collect() %>%
+      left_join(select(stations_update_2022_sf,
+                       c(station_id, name, geometry)),
                 by = join_by(End.Station.Id == station_id)) %>%
-      select(End.Month, End.Station.Id, n, name, geometry) %>%
       rename(station_id = End.Station.Id) %>%
-      filter(End.Month == input$select_month) %>%
       mutate(rank = row_number())
     top_end_stations_df(temp_df2)  
   })
@@ -763,17 +780,20 @@ To see the data for a given station, click on the station marker on the map and 
     
     if (input$year_vs_month_io == "Yearly"){
       # generate dataset containing all 2022 rides
-      temp_df_io <- rides_2022_cleaned %>%
+      # NOTE that in addition to the quirky handling of the selectInput value for month (see notes in pane 1), there is an issue with full_join of arrow tables where it will retain the left table key as NA if the value is only present in the right table (at least as of arrow 12), so tables are collected into R before joining
+      temp_df_io <- rides_2022_dset %>%
         count(Start.Station.Id) %>%
         rename(Start.Count = n) %>%
-        full_join(rides_2022_cleaned %>%
+        collect() %>%
+        full_join(rides_2022_dset %>%
                     count(End.Station.Id) %>%
-                    rename(End.Count = n),
+                    rename(End.Count = n) %>%
+                    collect(),
                   by = join_by(Start.Station.Id == End.Station.Id)) %>%
         mutate(IO.Ratio = Start.Count/End.Count) %>%
-        left_join(stations_update_2022_sf,
+        left_join(select(stations_update_2022_sf,
+                         c(station_id, name, geometry)),
                   by = join_by(Start.Station.Id == station_id)) %>%
-        select(Start.Station.Id:name, geometry) %>%
         rename(station_id = Start.Station.Id)
       io_input(temp_df_io)
       
@@ -794,20 +814,24 @@ To see the data for a given station, click on the station marker on the map and 
   
   observeEvent(input$select_month_io, {
     req(input$year_vs_month_io == "Monthly")
-    temp_df_io <- rides_2022_cleaned %>%
+    temp_df_io <- rides_2022_dset %>%
+      filter(month(Start.Time) == as.numeric(!!input$select_month_io)) %>%
       count(Start.Station.Id, Trip.Month = month(Start.Time)) %>%
       rename(Start.Count = n) %>%
-      full_join(rides_2022_cleaned %>%
+      collect() %>%
+      full_join(rides_2022_dset %>%
+                  filter(month(End.Time) == as.numeric(!!input$select_month_io)) %>%
                   count(End.Station.Id, Trip.Month = month(End.Time)) %>%
-                  rename(End.Count = n),
+                  rename(End.Count = n) %>%
+                  collect(),
                 by = join_by(Start.Station.Id == End.Station.Id,
                              Trip.Month)) %>%
       mutate(IO.Ratio = Start.Count/End.Count) %>%
-      left_join(stations_update_2022_sf,
+      left_join(select(stations_update_2022_sf,
+                       c(station_id, name, geometry)),
                 by = join_by(Start.Station.Id == station_id)) %>%
-      select(Start.Station.Id:name, geometry) %>%
-      rename(station_id = Start.Station.Id) %>%
-      filter(Trip.Month == input$select_month_io)
+      rename(station_id = Start.Station.Id)
+    
     io_input(temp_df_io)
   })
   

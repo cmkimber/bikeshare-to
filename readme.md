@@ -9,14 +9,14 @@ The aims of these reports are twofold:
 
 The intention is for this series of reports to be published as blog posts on LinkedIn, but they are also readable in this repo along with the underlying code.
 
-In addition, there is an interactive web application in development that allows for exploration of a subset of the data used in the reports (from 2022). The application focuses on spatial aspects of the service in particular. At the moment, the web application is unfortunately not hosted online, as it is too memory-intensive for a free tier shinyapps.io instance and requires packages which are not available in shinylive.io. I am working on a solution for hosting currently. Find the current web app code within this repo [here](https://github.com/cmkimber/bikeshare-to/tree/main/bikeshare-to-app).
+In addition, there is an interactive web application in development that allows for exploration of a subset of the data used in the reports (from 2022). The application focuses on spatial aspects of the service in particular. At the moment, the web application is unfortunately not hosted online, as it is too memory-intensive for a free tier shinyapps.io instance and requires packages which are not available in shinylive.io. I am working on a solution for hosting currently. [Find the current web app code within this repo here](/bikeshare-to-app) and [view an animated walkthrough of the app here](/bikeshare-to-app/walkthrough.md).
 
 ## Contents
 
-- Data Processing: scripts for ingesting and preprocessing data from the City of Toronto. At this point, all data importing was done in R/tidyverse.
-- Data Exploraton: scripts for identifying features of the data or patterns in the results to guide report and web application development.
-- Report 1: Ridership statistics at a yearly/monthly scale from 2017-2022. Generated using R with tidyverse and ggplot2 in Jupyter Lab.
-- Web Application (bikeshare-to-app): Ridership data from 2022 with spatial information on stations used during the rides, presented in a series of interactive graphics. Built using R/tidyverse and Shiny in RStudio, using a series of other tools delineated in the app readme. **Currently WIP**.
+- [Data Processing](/Data%20Processing): scripts for ingesting and preprocessing data from the City of Toronto. At this point, all data importing was done in R/tidyverse.
+- [Data Exploration](/Data%20Exploration): scripts for identifying features of the data or patterns in the results to guide report and web application development.
+- [Report 1](/Report%201/readme.md): Ridership statistics at a yearly/monthly scale from 2017-2022. Generated using R with tidyverse and ggplot2 in Jupyter Lab.
+- [Web Application (bikeshare-to-app)](/bikeshare-to-app): Ridership data from 2022 with spatial information on stations used during the rides, presented in a series of interactive graphics. Built using R/tidyverse and Shiny in RStudio, using a series of other tools delineated in the app readme. **Currently WIP**.
 
 ## Limitations to Public Data
 
