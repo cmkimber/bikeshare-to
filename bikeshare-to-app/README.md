@@ -2,7 +2,7 @@
 
 ## About This Application
 
-This web application is part of an analysis of publicly available usage data from Bike Share Toronto. More information about the analysis in a broader context, including information about the dataset used, can be found in the [main repo readme](https://github.com/cmkimber/bikeshare-to/blob/main/readme.md). The purpose of the application is to allow interactive exploration of how Bike Share Toronto was utilized during the year 2022, illuminating interesting patterns and complementing current and future written reports, with a particular focus on spatial components of the data presented as interactive maps. The application is currently WIP, with new elements roadmapped and being added regularly.
+This web application is part of an analysis of publicly available usage data from Bike Share Toronto. More information about the analysis in a broader context, including information about the dataset used, can be found in the [main repo readme](https://github.com/cmkimber/bikeshare-to/blob/main/readme.md). The purpose of the application is to allow interactive exploration of how Bike Share Toronto was utilized during the year 2022, illuminating interesting patterns and complementing current and future written reports, with a particular focus on spatial components of the data presented as interactive maps. The application is currently WIP, with new elements roadmapped and being added regularly. [View an animated walkthrough of the app.](https://github.com/cmkimber/bikeshare-to/blob/arrow_rebuild/bikeshare-to-app/walkthrough.md)
 
 ## A Note on Data
 

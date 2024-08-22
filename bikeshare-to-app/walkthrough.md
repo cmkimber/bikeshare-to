@@ -29,3 +29,7 @@ This pane shows how traffic flows into and out of a given Bike Share Toronto sta
 The ratio of trips started to ended is shown using colour-coded markers on the map; blue markers have more flow out than in and vice versa for red markers. A popup with data on a specific station, including a bar plot showing the number of trips started and ended, can be displayed by clicking on the station marker on the map.
 
 ![](https://github.com/cmkimber/bikeshare-to/blob/42e9f3ad054294d757f8842be386ce29417759c7/Assets/Screen_Recording_Pane_3.gif)
+
+## Acknowledgements
+
+* [convert-video-to-gif](https://blog.interaction-dynamics.io/how-to-convert-your-screen-recordings-to-gif-on-macos-productivity-1-781dbe56fe5c)
