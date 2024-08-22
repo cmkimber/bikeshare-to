@@ -10,7 +10,7 @@ This pane shows daily spatial density of Bike Share Toronto system use across 20
 
 ![](https://github.com/cmkimber/bikeshare-to/blob/42e9f3ad054294d757f8842be386ce29417759c7/Assets/Screen_Recording_Pane_1.gif)
 
-## Pane 2: Starting vs. Ending Station Use by monthly
+## Pane 2: Starting vs. Ending Station Use by Month
 
 This pane shows how popular Bike Share Toronto stations were as starting or ending points for rides across 2022. The user can toggle between yearly and monthly data at the top of the pane.
 
