@@ -8,7 +8,7 @@ At present, the Shiny app is too memory-intensive to host on shinyapps.io, and s
 
 This pane shows daily spatial density of Bike Share Toronto system use across 2022, visualized using a heatmap. The heatmap is generated using the start points of rides, as ride routes are not available. Using the date slider, a given date can be chosen or the visualization can be animated using the play/pause buttons. To contextualize the spatial density of system use, the accompanying bar plot shows the number of trips made on the selected day, segmented by user type.
 
-![](https://github.com/cmkimber/bikeshare-to/blob/42e9f3ad054294d757f8842be386ce29417759c7/Assets/Screen_Recording_Pane_1.gif)
+![](/Assets/Screen_Recording_Pane_1.gif)
 
 ## Pane 2: Starting vs. Ending Station Use by Month
 
@@ -20,7 +20,7 @@ The relationship between the number of rides started and ended for a station is 
 
 A given station can be highlighted by selecting it at the top of the pane, or clicking on it in any of the visualizations.
 
-![](https://github.com/cmkimber/bikeshare-to/blob/42e9f3ad054294d757f8842be386ce29417759c7/Assets/Screen_Recording_Pane_2.gif)
+![](/Assets/Screen_Recording_Pane_2.gif)
 
 ## Pane 3: Ratio of Trips Started to Ended by Station
 
@@ -28,7 +28,7 @@ This pane shows how traffic flows into and out of a given Bike Share Toronto sta
 
 The ratio of trips started to ended is shown using colour-coded markers on the map; blue markers have more flow out than in and vice versa for red markers. A popup with data on a specific station, including a bar plot showing the number of trips started and ended, can be displayed by clicking on the station marker on the map.
 
-![](https://github.com/cmkimber/bikeshare-to/blob/42e9f3ad054294d757f8842be386ce29417759c7/Assets/Screen_Recording_Pane_3.gif)
+![](/Assets/Screen_Recording_Pane_3.gif)
 
 ## Acknowledgements
 

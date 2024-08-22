@@ -9,7 +9,7 @@ The aims of these reports are twofold:
 
 The intention is for this series of reports to be published as blog posts on LinkedIn, but they are also readable in this repo along with the underlying code.
 
-In addition, there is an interactive web application in development that allows for exploration of a subset of the data used in the reports (from 2022). The application focuses on spatial aspects of the service in particular. At the moment, the web application is unfortunately not hosted online, as it is too memory-intensive for a free tier shinyapps.io instance and requires packages which are not available in shinylive.io. I am working on a solution for hosting currently. [Find the current web app code within this repo here](https://github.com/cmkimber/bikeshare-to/tree/main/bikeshare-to-app) and [view an animated walkthrough of the app here](https://github.com/cmkimber/bikeshare-to/blob/arrow_rebuild/bikeshare-to-app/walkthrough.md).
+In addition, there is an interactive web application in development that allows for exploration of a subset of the data used in the reports (from 2022). The application focuses on spatial aspects of the service in particular. At the moment, the web application is unfortunately not hosted online, as it is too memory-intensive for a free tier shinyapps.io instance and requires packages which are not available in shinylive.io. I am working on a solution for hosting currently. [Find the current web app code within this repo here](/bikeshare-to-app) and [view an animated walkthrough of the app here](/bikeshare-to-app/walkthrough.md).
 
 ## Contents
 
