@@ -70,6 +70,34 @@ theme_bikeshare <- function(){
 
 zis_colours <- wes_palette("Zissou1", type = "discrete")
 
+yearly_rides_station <- rides_2022_dset %>%
+  mutate(trip_month = as.Date(floor_date(Start.Time, unit = "month"))) %>%
+  group_by(trip_month, User.Type) %>%
+  count(Start.Station.Id) %>%
+  filter(Start.Station.Id == 7260) %>%
+  collect() %>%
+  union_all(rides_2022_dset %>%
+              mutate(trip_month = as.Date(floor_date(Start.Time, unit = "month"))) %>%
+              count(trip_month, Start.Station.Id) %>%
+              collect() %>%
+              mutate(User.Type = "Total", .before = 1) %>%
+              filter(Start.Station.Id == 7260))
+
+p_y <- ggplot(yearly_rides_station, aes(x = trip_month,
+                                         y = n,
+                                         group = User.Type,
+                                         fill = User.Type)) +
+  geom_bar_interactive(position = "dodge", stat = "identity") +
+  labs(x = "Month",
+       y = "Number of Trips",
+       colour = "User Type") +
+  scale_x_date(date_breaks = "1 month",
+               date_labels = "%b") +
+  theme_bikeshare() +
+  theme(axis.ticks.x = element_line())
+
+p_y
+
 monthly_rides_station <- rides_2022_dset %>%
   filter(month(Start.Time) == 1) %>%
   group_by(User.Type) %>%
@@ -84,13 +112,13 @@ monthly_rides_station <- rides_2022_dset %>%
               filter(Start.Station.Id == 7260)
               )
 
-p <- ggplot(monthly_rides_station, aes(x = trip_date,
+p_m <- ggplot(monthly_rides_station, aes(x = trip_date,
                                        y = n,
                                        group = User.Type,
                                        colour = User.Type
                                        )) +
   geom_line_interactive(aes(data_id = User.Type)) +
-  geom_point_interactive(aes(tooltip = glue("{as.character(wday(trip_date, label = TRUE))}, {as.character(month(trip_date, label = TRUE))}, {day(trip_date)}<br/>",
+  geom_point_interactive(aes(tooltip = glue("{strftime(trip_date, format = '%a, %b %d')}<br/>",
                                             "{User.Type}<br/>",
                                             "{n} Trips<br/>"
                                             ),
@@ -109,10 +137,60 @@ p <- ggplot(monthly_rides_station, aes(x = trip_date,
   theme(axis.ticks.x = element_line())
 
 # ggplotly(p) 
-girafe(ggobj = p,
+girafe(ggobj = p_m,
       options = list(
         opts_tooltip(use_fill = TRUE,
                      use_stroke = TRUE),
         opts_hover(css = "stroke-width:2;"),
         opts_hover_inv(css = "opacity:0.3;")
       ))
+
+
+# Note that it is important to expand the table using complete() to obtain all possible combinations of hour and User Type to properly render hours with 0 trips
+daily_rides_station <- rides_2022_dset %>%
+  filter(date(Start.Time) == "2022-07-01" & Start.Station.Id == 7260) %>%
+  collect() %>%
+  mutate(trip_hour = floor_date(Start.Time, unit = "hour")) %>%
+  complete(trip_hour = seq(from = as.POSIXct("2022-07-01"),
+                           to = as.POSIXct("2022-07-01") + hours(24) - seconds(1),
+                           by = "hour"),
+           User.Type) %>%
+  group_by(User.Type) %>%
+  count(trip_hour, Start.Station.Id) %>%
+  union_all(rides_2022_dset %>%
+              filter(date(Start.Time) == "2022-07-01" & Start.Station.Id == 7260) %>%
+              mutate(trip_hour = floor_date(Start.Time, unit = "hour")) %>%
+              collect() %>%
+              complete(trip_hour = seq(from = as.POSIXct("2022-07-01"),
+                                       to = as.POSIXct("2022-07-01") + hours(24) - seconds(1),
+                                       by = "hour")) %>%
+              count(trip_hour, Start.Station.Id) %>%
+              mutate(User.Type = "Total", .before = 1)
+            ) %>%
+  replace_na(list(n = 0, Start.Station.Id = 7260))
+
+p_d <- ggplot(daily_rides_station, aes(x = trip_hour,
+                                       y = n,
+                                       group = User.Type,
+                                       colour = User.Type)) +
+  geom_line_interactive(aes(data_id = User.Type)) +
+  geom_point_interactive(aes(tooltip = glue("{strftime(trip_hour, format = '%H:%M')}<br/>",
+                                            "{User.Type}<br/>",
+                                            "{n} Trips"),
+                             data_id = trip_hour)) +
+  labs(x = "Time",
+       y = "Number of Trips",
+       colour = "User Type") + 
+  scale_x_datetime(date_breaks = "4 hours",
+                   date_labels = "%H:%M") +
+  scale_colour_manual(values = c(zis_colours[1], zis_colours[5], zis_colours[3])) +
+  theme_bikeshare() +
+  theme(axis.ticks.x = element_line())
+
+girafe(ggobj = p_d,
+       options = list(
+         opts_tooltip(use_fill = TRUE,
+                      use_stroke = TRUE),
+         opts_hover(css = "stroke-width:2;"),
+         opts_hover_inv(css = "opacity:0.3;")
+       ))
