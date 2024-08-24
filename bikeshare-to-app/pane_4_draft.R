@@ -71,26 +71,26 @@ theme_bikeshare <- function(){
 zis_colours <- wes_palette("Zissou1", type = "discrete")
 
 yearly_rides_station <- rides_2022_dset %>%
-  filter(Start.Station.Id == 7260) %>%
+  filter(Start.Station.Id == 7746) %>%
   mutate(trip_month = as.Date(floor_date(Start.Time, unit = "month"))) %>%
-  collect() %>%
-  complete(trip_month = seq.Date(from = as.Date("2022-01-01"),
-                                 to = as.Date("2022-12-31"),
-                                 by = "month"),
-           User.Type) %>%
   group_by(trip_month, User.Type) %>%
   count() %>%
+  collect() %>%
+  group_by(User.Type) %>%
+  complete(trip_month = seq.Date(from = as.Date("2022-01-01"),
+                                 to = as.Date("2022-12-31"),
+                                 by = "month")) %>%
   union_all(rides_2022_dset %>%
-              filter(Start.Station.Id == 7260) %>%
+              filter(Start.Station.Id == 7746) %>%
               mutate(trip_month = as.Date(floor_date(Start.Time, unit = "month"))) %>%
+              count(trip_month) %>%
               collect() %>%
               complete(trip_month = seq.Date(from = as.Date("2022-01-01"),
                                              to = as.Date("2022-12-31"),
                                              by = "month")) %>%
-              count(trip_month) %>%
               mutate(User.Type = "Total", .before = 1)
-  ) %>%
-  replace_na(list(n = 0, Start.Station.Id == 7260))
+            ) %>%
+  replace_na(list(n = 0))
 
 p_y <- ggplot(yearly_rides_station, aes(x = trip_month,
                                          y = n,
