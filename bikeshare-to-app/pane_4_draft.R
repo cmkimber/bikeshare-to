@@ -108,18 +108,26 @@ p_y <- ggplot(yearly_rides_station, aes(x = trip_month,
 p_y
 
 monthly_rides_station <- rides_2022_dset %>%
-  filter(month(Start.Time) == 1) %>%
-  group_by(User.Type) %>%
-  count(trip_date = date(Start.Time), Start.Station.Id) %>%
-  filter(Start.Station.Id == 7260) %>%
+  filter(month(Start.Time) == 1 & Start.Station.Id == 7260) %>%
+  mutate(trip_date = date(Start.Time)) %>%
+  group_by(trip_date, User.Type) %>%
+  count() %>%
   collect() %>%
+  group_by(User.Type) %>%
+  complete(trip_date = seq.Date(from = as.Date(paste(2022, 1, 01, sep = "-")),
+                                to = as.Date(paste(2022, 1, 01, sep = "-")) + months(1) - days(1),
+                                by = "day")) %>%
   union_all(rides_2022_dset %>%
-              filter(month(Start.Time) == 1) %>%
-              count(trip_date = date(Start.Time), Start.Station.Id) %>%
+              filter(month(Start.Time) == 1 & Start.Station.Id == 7260) %>%
+              mutate(trip_date = date(Start.Time)) %>%
+              count(trip_date) %>%
               collect() %>%
-              mutate(User.Type = "Total", .before = 1) %>%
-              filter(Start.Station.Id == 7260)
-              )
+              complete(trip_date = seq.Date(from = as.Date(paste(2022, 1, 01, sep = "-")),
+                                            to = as.Date(paste(2022, 1, 01, sep = "-")) + months(1) - days(1),
+                                            by = "day")) %>%
+              mutate(User.Type = "Total", .before = 1)
+              ) %>%
+  replace_na(list(n = 0))
 
 p_m <- ggplot(monthly_rides_station, aes(x = trip_date,
                                        y = n,
