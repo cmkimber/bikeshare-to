@@ -70,6 +70,7 @@ theme_bikeshare <- function(){
 
 zis_colours <- wes_palette("Zissou1", type = "discrete")
 
+# YEARLY RIDES ----
 yearly_rides_station <- rides_2022_dset %>%
   filter(Start.Station.Id == 7746) %>%
   mutate(trip_month = as.Date(floor_date(Start.Time, unit = "month"))) %>%
@@ -96,17 +97,22 @@ p_y <- ggplot(yearly_rides_station, aes(x = trip_month,
                                          y = n,
                                          group = User.Type,
                                          fill = User.Type)) +
-  geom_bar_interactive(position = "dodge", stat = "identity") +
+  geom_bar_interactive(aes(data_id = trip_month,
+                           tooltip = n),
+                       position = "dodge",
+                       stat = "identity") +
   labs(x = "Month",
        y = "Number of Trips",
-       colour = "User Type") +
+       fill = "User Type") +
   scale_x_date(date_breaks = "1 month",
                date_labels = "%b") +
+  scale_fill_manual(values = c(zis_colours[1], zis_colours[5], zis_colours[3])) +
   theme_bikeshare() +
   theme(axis.ticks.x = element_line())
 
-p_y
+girafe(ggobj = p_y)
 
+# MONTHLY RIDES ----
 monthly_rides_station <- rides_2022_dset %>%
   filter(month(Start.Time) == 1 & Start.Station.Id == 7260) %>%
   mutate(trip_date = date(Start.Time)) %>%
@@ -162,6 +168,7 @@ girafe(ggobj = p_m,
         opts_hover_inv(css = "opacity:0.3;")
       ))
 
+# DAILY RIDES ----
 
 # Note that it is important to expand the table using complete() to obtain all possible combinations of hour and User Type to properly render hours with 0 trips
 daily_rides_station <- rides_2022_dset %>%
