@@ -71,17 +71,26 @@ theme_bikeshare <- function(){
 zis_colours <- wes_palette("Zissou1", type = "discrete")
 
 yearly_rides_station <- rides_2022_dset %>%
-  mutate(trip_month = as.Date(floor_date(Start.Time, unit = "month"))) %>%
-  group_by(trip_month, User.Type) %>%
-  count(Start.Station.Id) %>%
   filter(Start.Station.Id == 7260) %>%
+  mutate(trip_month = as.Date(floor_date(Start.Time, unit = "month"))) %>%
   collect() %>%
+  complete(trip_month = seq.Date(from = as.Date("2022-01-01"),
+                                 to = as.Date("2022-12-31"),
+                                 by = "month"),
+           User.Type) %>%
+  group_by(trip_month, User.Type) %>%
+  count() %>%
   union_all(rides_2022_dset %>%
+              filter(Start.Station.Id == 7260) %>%
               mutate(trip_month = as.Date(floor_date(Start.Time, unit = "month"))) %>%
-              count(trip_month, Start.Station.Id) %>%
               collect() %>%
-              mutate(User.Type = "Total", .before = 1) %>%
-              filter(Start.Station.Id == 7260))
+              complete(trip_month = seq.Date(from = as.Date("2022-01-01"),
+                                             to = as.Date("2022-12-31"),
+                                             by = "month")) %>%
+              count(trip_month) %>%
+              mutate(User.Type = "Total", .before = 1)
+  ) %>%
+  replace_na(list(n = 0, Start.Station.Id == 7260))
 
 p_y <- ggplot(yearly_rides_station, aes(x = trip_month,
                                          y = n,
@@ -149,22 +158,23 @@ girafe(ggobj = p_m,
 # Note that it is important to expand the table using complete() to obtain all possible combinations of hour and User Type to properly render hours with 0 trips
 daily_rides_station <- rides_2022_dset %>%
   filter(date(Start.Time) == "2022-07-01" & Start.Station.Id == 7260) %>%
-  collect() %>%
   mutate(trip_hour = floor_date(Start.Time, unit = "hour")) %>%
+  group_by(User.Type) %>%
+  count(trip_hour) %>%
+  collect() %>%
+  group_by(User.Type) %>%
   complete(trip_hour = seq(from = as.POSIXct("2022-07-01"),
                            to = as.POSIXct("2022-07-01") + hours(24) - seconds(1),
                            by = "hour"),
-           User.Type) %>%
-  group_by(User.Type) %>%
-  count(trip_hour, Start.Station.Id) %>%
+  ) %>%
   union_all(rides_2022_dset %>%
               filter(date(Start.Time) == "2022-07-01" & Start.Station.Id == 7260) %>%
               mutate(trip_hour = floor_date(Start.Time, unit = "hour")) %>%
+              count(trip_hour) %>%
               collect() %>%
               complete(trip_hour = seq(from = as.POSIXct("2022-07-01"),
                                        to = as.POSIXct("2022-07-01") + hours(24) - seconds(1),
                                        by = "hour")) %>%
-              count(trip_hour, Start.Station.Id) %>%
               mutate(User.Type = "Total", .before = 1)
             ) %>%
   replace_na(list(n = 0, Start.Station.Id = 7260))
