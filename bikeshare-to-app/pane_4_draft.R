@@ -110,7 +110,9 @@ p_y <- ggplot(yearly_rides_station, aes(x = trip_month,
   theme_bikeshare() +
   theme(axis.ticks.x = element_line())
 
-girafe(ggobj = p_y)
+girafe(ggobj = p_y,
+       options = list(opts_tooltip(use_fill = TRUE,
+                                   use_stroke = TRUE)))
 
 # MONTHLY RIDES ----
 monthly_rides_station <- rides_2022_dset %>%
