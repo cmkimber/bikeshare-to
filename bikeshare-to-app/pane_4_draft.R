@@ -98,7 +98,10 @@ p_y <- ggplot(yearly_rides_station, aes(x = trip_month,
                                          group = User.Type,
                                          fill = User.Type)) +
   geom_bar_interactive(aes(data_id = trip_month,
-                           tooltip = n),
+                           tooltip = glue("{month(trip_month, label = TRUE)}<br/>",
+                                          "{User.Type}<br/>",
+                                          "{n} Trips<br/>",
+                           )),
                        position = "dodge",
                        stat = "identity") +
   labs(x = "Month",
