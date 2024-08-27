@@ -116,7 +116,8 @@ p_y <- ggplot(yearly_rides_station, aes(x = trip_month,
 girafe(ggobj = p_y,
        options = list(opts_tooltip(use_fill = TRUE,
                                    use_stroke = TRUE),
-                      opts_hover(css = "stroke:black;stroke-width:2px")),)
+                      opts_hover(css = "stroke:white;stroke-width:2px"),
+                      opts_hover_inv(css = "opacity:0.3;")))
 
 # MONTHLY RIDES ----
 monthly_rides_station <- rides_2022_dset %>%
