@@ -117,7 +117,9 @@ girafe(ggobj = p_y,
        options = list(opts_tooltip(use_fill = TRUE,
                                    use_stroke = TRUE),
                       opts_hover(css = "stroke:white;stroke-width:2px"),
-                      opts_hover_inv(css = "opacity:0.3;")))
+                      opts_hover_inv(css = "opacity:0.3;"),
+                      opts_selection(css = "stroke:white;stroke-width:2px")
+                      ))
 
 # MONTHLY RIDES ----
 monthly_rides_station <- rides_2022_dset %>%
@@ -172,7 +174,8 @@ girafe(ggobj = p_m,
         opts_tooltip(use_fill = TRUE,
                      use_stroke = TRUE),
         opts_hover(css = "stroke-width:2;"),
-        opts_hover_inv(css = "opacity:0.3;")
+        opts_hover_inv(css = "opacity:0.3;"),
+        opts_selection(css = "stroke:white;stroke-width:2px")
       ))
 
 # DAILY RIDES ----
@@ -224,5 +227,6 @@ girafe(ggobj = p_d,
          opts_tooltip(use_fill = TRUE,
                       use_stroke = TRUE),
          opts_hover(css = "stroke-width:2;"),
-         opts_hover_inv(css = "opacity:0.3;")
+         opts_hover_inv(css = "opacity:0.3;"),
+         opts_selection(css = "stroke:white;stroke-width:2px")
        ))
