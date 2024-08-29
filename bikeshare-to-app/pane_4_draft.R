@@ -8,6 +8,9 @@ library(wesanderson)
 library(ggiraph)
 library(RColorBrewer)
 library(glue)
+library(reactlog)
+
+reactlog_enable()
 
 rides_path <- file.path("./Data/rides_2022_cleaned")
 rides_2022_dset <- open_dataset(rides_path)
@@ -175,6 +178,7 @@ server <- function(input, output, session){
   })
   
   output$plot_monthly_stationwise <- renderGirafe({
+    req(monthly_rides_stationwise())
     p_m <- ggplot(monthly_rides_stationwise(), aes(x = trip_date,
                                                    y = n,
                                                    group = User.Type,
@@ -241,6 +245,7 @@ server <- function(input, output, session){
   })
   
   output$plot_daily_stationwise <- renderGirafe({
+    req(daily_rides_stationwise())
     p_d <- ggplot(daily_rides_stationwise(), aes(x = trip_hour,
                                            y = n,
                                            group = User.Type,
