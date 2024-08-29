@@ -222,8 +222,8 @@ server <- function(input, output, session){
       count(trip_hour) %>%
       collect() %>%
       group_by(User.Type) %>%
-      complete(trip_hour = seq(from = as.POSIXct(!!input$plot_monthly_stationwise_selected),
-                               to = as.POSIXct(!!input$plot_monthly_stationwise_selected) + hours(24) - seconds(1),
+      complete(trip_hour = seq(from = as.POSIXct(!!input$plot_monthly_stationwise_selected, tz = "GMT"),
+                               to = as.POSIXct(!!input$plot_monthly_stationwise_selected, tz = "GMT") + hours(24) - seconds(1),
                                by = "hour"),
       ) %>%
       union_all(rides_2022_dset %>%
@@ -231,8 +231,8 @@ server <- function(input, output, session){
                   mutate(trip_hour = floor_date(Start.Time, unit = "hour")) %>%
                   count(trip_hour) %>%
                   collect() %>%
-                  complete(trip_hour = seq(from = as.POSIXct(!!input$plot_monthly_stationwise_selected),
-                                           to = as.POSIXct(!!input$plot_monthly_stationwise_selected) + hours(24) - seconds(1),
+                  complete(trip_hour = seq(from = as.POSIXct(!!input$plot_monthly_stationwise_selected, tz = "GMT"),
+                                           to = as.POSIXct(!!input$plot_monthly_stationwise_selected, tz = "GMT") + hours(24) - seconds(1),
                                            by = "hour")) %>%
                   mutate(User.Type = "Total", .before = 1)
       ) %>%
@@ -246,7 +246,7 @@ server <- function(input, output, session){
                                            group = User.Type,
                                            colour = User.Type)) +
       geom_line_interactive() +
-      geom_point_interactive(aes(tooltip = glue("{strftime(trip_hour, format = '%H:%M')}<br/>",
+      geom_point_interactive(aes(tooltip = glue("{strftime(trip_hour, format = '%H:%M', tz = 'GMT')}<br/>",
                                                 "{User.Type}<br/>",
                                                 "{n} Trips"),
                                  data_id = trip_hour)) +
