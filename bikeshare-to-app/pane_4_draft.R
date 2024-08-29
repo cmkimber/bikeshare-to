@@ -195,6 +195,7 @@ server <- function(input, output, session){
                    # NOTE minor ticks only work from ggplot2 3.5.0
                    # guide = guide_axis(minor.ticks = TRUE)
       ) +
+      scale_y_continuous(limits = c(0, NA)) +
       scale_colour_manual(values = c(zis_colours[1], zis_colours[5], zis_colours[3])) +
       theme_bikeshare() + 
       theme(axis.ticks.x = element_line())
@@ -254,6 +255,7 @@ server <- function(input, output, session){
            colour = "User Type") + 
       scale_x_datetime(date_breaks = "4 hours",
                        date_labels = "%H:%M") +
+      scale_y_continuous(limits = c(0, NA)) +
       scale_colour_manual(values = c(zis_colours[1], zis_colours[5], zis_colours[3])) +
       theme_bikeshare() +
       theme(axis.ticks.x = element_line())
