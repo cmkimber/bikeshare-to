@@ -206,7 +206,7 @@ server <- function(input, output, session){
                           use_stroke = TRUE),
              opts_hover(css = "stroke-width:2;"),
              opts_hover_inv(css = "opacity:0.3;"),
-             opts_selection(selected = "2022-01-01",
+             opts_selection(selected = as.Date(paste("2022", month(as.Date(input$plot_yearly_stationwise_selected)), "01", sep = "-")),
                             type = "single",
                             css = "stroke:black;stroke-width:2px")
            ))
