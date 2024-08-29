@@ -148,11 +148,9 @@ server <- function(input, output, session){
            ))
   })
 
-  
-  monthly_rides_stationwise <- reactiveVal(value = NULL)
-  
-  observeEvent(input$plot_yearly_stationwise_selected, {
-    temp_monthly <- rides_2022_dset %>%
+  monthly_rides_stationwise <- reactive({
+    req(!(is.null(input$plot_yearly_stationwise_selected)))
+    rides_2022_dset %>%
       filter(month(Start.Time) == month(as.Date(!!input$plot_yearly_stationwise_selected)) & Start.Station.Id == as.numeric(!!input$select_station_4)) %>%
       mutate(trip_date = date(Start.Time)) %>%
       group_by(trip_date, User.Type) %>%
@@ -173,8 +171,6 @@ server <- function(input, output, session){
                   mutate(User.Type = "Total", .before = 1)
       ) %>%
       replace_na(list(n = 0))
-    monthly_rides_stationwise(temp_monthly)
-    
   })
   
   output$plot_monthly_stationwise <- renderGirafe({
@@ -216,10 +212,9 @@ server <- function(input, output, session){
            ))
   })
   
-  daily_rides_stationwise <- reactiveVal(value = NULL)
-  
-  observeEvent(input$plot_monthly_stationwise_selected, {
-    temp_daily <- rides_2022_dset %>%
+  daily_rides_stationwise <- reactive({
+    req(!(is.null(input$plot_monthly_stationwise_selected)))
+    rides_2022_dset %>%
       filter(date(Start.Time) == as.Date(!!input$plot_monthly_stationwise_selected) & Start.Station.Id == as.numeric(!!input$select_station_4)) %>%
       mutate(trip_hour = floor_date(Start.Time, unit = "hour")) %>%
       group_by(User.Type) %>%
@@ -241,7 +236,6 @@ server <- function(input, output, session){
                   mutate(User.Type = "Total", .before = 1)
       ) %>%
       replace_na(list(n = 0))
-    daily_rides_stationwise(temp_daily)
   })
   
   output$plot_daily_stationwise <- renderGirafe({
