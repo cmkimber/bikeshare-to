@@ -93,10 +93,9 @@ ui <- page_fluid(
 )
 
 server <- function(input, output, session){
-  yearly_rides_stationwise <- reactiveVal(value = NULL)
   
-  observeEvent(input$select_station_4, {
-    temp_yearly <- rides_2022_dset %>%
+  yearly_rides_stationwise <- reactive({
+    rides_2022_dset %>%
       filter(Start.Station.Id == as.numeric(!!input$select_station_4)) %>%
       mutate(trip_month = as.Date(floor_date(Start.Time, unit = "month"))) %>%
       group_by(trip_month, User.Type) %>%
@@ -116,7 +115,6 @@ server <- function(input, output, session){
                                                  by = "month")) %>%
                   mutate(User.Type = "Total", .before = 1)) %>%
       replace_na(list(n = 0))
-    yearly_rides_stationwise(temp_yearly)
   })
   
   output$plot_yearly_stationwise <- renderGirafe({
