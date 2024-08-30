@@ -83,17 +83,15 @@ for (i in (1:length(station_choices)))
                                       ")")
 
 ui <- page_fluid(
-  layout_columns(
-    card(titlePanel("Placeholder")),
-    # card(actionButton("help_4",
-    #                   "Help")),
-    col_widths = c(6,-3,3)),
-  card(card_header = "Select Station",
-       card_body(class = "align-items_center",
-                 selectInput("select_station_4",
+  # layout_columns(
+  #   card(titlePanel("Placeholder")),
+  #   # card(actionButton("help_4",
+  #   #                   "Help")),
+  #   col_widths = c(6,-3,3)),
+  card(selectInput("select_station_4",
                              "Select Station:",
                              choices = station_choices,
-                             selected = 7000))),
+                             selected = 7000)),
   layout_column_wrap(width = 1/2,
                      card(card_header = "Trips Started by Month",
                           card_body = girafeOutput("plot_yearly_swise_start")),
@@ -151,7 +149,7 @@ server <- function(input, output, session){
       replace_na(list(n = 0))
   })
   
-  output$plot_yearly_stationwise <- renderGirafe({
+  output$plot_yearly_swise_start <- renderGirafe({
     p_y <- ggplot(yearly_rides_swise_start(), aes(x = trip_month,
                                             y = n,
                                             group = User.Type,
@@ -207,7 +205,7 @@ server <- function(input, output, session){
       replace_na(list(n = 0))
   })
   
-  output$plot_yearly_stationwise <- renderGirafe({
+  output$plot_yearly_swise_end <- renderGirafe({
     p_y <- ggplot(yearly_rides_swise_end(), aes(x = trip_month,
                                                 y = n,
                                                 group = User.Type,
@@ -243,10 +241,10 @@ server <- function(input, output, session){
   
   # MONTHLY DATA----
 
-  selected_day <- reactiveVal("2022-01-01")
+  selected_day <- reactiveVal(value = NULL)
   
   observeEvent(selected_month(),{
-    temp_day <- selected_month
+    temp_day <- selected_month()
     selected_day(temp_day)
   })
   
