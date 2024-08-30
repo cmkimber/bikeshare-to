@@ -8,9 +8,9 @@ library(wesanderson)
 library(ggiraph)
 library(RColorBrewer)
 library(glue)
-library(reactlog)
+# library(reactlog)
 
-reactlog_enable()
+# reactlog_enable()
 
 rides_path <- file.path("./Data/rides_2022_cleaned")
 rides_2022_dset <- open_dataset(rides_path)
@@ -71,6 +71,9 @@ theme_bikeshare <- function(){
 }
 
 zis_colours <- wes_palette("Zissou1", type = "discrete")
+pal_pane_4 <- c("Annual Member" = zis_colours[1],
+                "Casual Member" = zis_colours[5],
+                "Total" = zis_colours[3])
 
 station_choices <- stations_update_2022_sf$station_id
 for (i in (1:length(station_choices)))
@@ -133,7 +136,8 @@ server <- function(input, output, session){
            fill = "User Type") +
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b") +
-      scale_fill_manual(values = c(zis_colours[1], zis_colours[5], zis_colours[3])) +
+      scale_fill_manual(values = pal_pane_4,
+                        limits = names(pal_pane_4)) +
       theme_bikeshare() +
       theme(axis.ticks.x = element_line())
     
@@ -196,7 +200,8 @@ server <- function(input, output, session){
                    # guide = guide_axis(minor.ticks = TRUE)
       ) +
       scale_y_continuous(limits = c(0, NA)) +
-      scale_colour_manual(values = c(zis_colours[1], zis_colours[5], zis_colours[3])) +
+      scale_colour_manual(values = pal_pane_4,
+                          limits = names(pal_pane_4)) +
       theme_bikeshare() + 
       theme(axis.ticks.x = element_line())
     
@@ -207,7 +212,7 @@ server <- function(input, output, session){
                           use_stroke = TRUE),
              opts_hover(css = "stroke-width:2;"),
              opts_hover_inv(css = "opacity:0.3;"),
-             opts_selection(selected = as.Date(paste("2022", month(as.Date(input$plot_yearly_stationwise_selected)), "01", sep = "-")),
+             opts_selection(selected = as.Date(input$plot_yearly_stationwise_selected),
                             type = "single",
                             css = "stroke:black;stroke-width:2px")
            ))
@@ -256,7 +261,8 @@ server <- function(input, output, session){
       scale_x_datetime(date_breaks = "4 hours",
                        date_labels = "%H:%M") +
       scale_y_continuous(limits = c(0, NA)) +
-      scale_colour_manual(values = c(zis_colours[1], zis_colours[5], zis_colours[3])) +
+      scale_colour_manual(values = pal_pane_4,
+                          limits = names(pal_pane_4)) +
       theme_bikeshare() +
       theme(axis.ticks.x = element_line())
     
