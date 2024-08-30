@@ -94,6 +94,10 @@ ui <- page_fluid(
 
 server <- function(input, output, session){
   
+  session$onFlushed(function(){
+    session$sendCustomMessage(type = 'plot_yearly_stationwise_set', message = "2022-01-01")
+  })
+  
   yearly_rides_stationwise <- reactive({
     rides_2022_dset %>%
       filter(Start.Station.Id == as.numeric(!!input$select_station_4)) %>%
@@ -144,7 +148,7 @@ server <- function(input, output, session){
                                        use_stroke = TRUE),
                           opts_hover(css = "stroke:white;stroke-width:2px"),
                           opts_hover_inv(css = "opacity:0.3;"),
-                          opts_selection(selected = "2022-01-01",
+                          opts_selection(selected = input$plot_yearly_stationwise_selected,
                                          type = "single",
                                          css = "stroke:black;stroke-width:2px")
            ))
