@@ -83,19 +83,35 @@ for (i in (1:length(station_choices)))
                                       ")")
 
 ui <- page_fluid(
+  layout_columns(
+    card(titlePanel("Placeholder")),
+    card(actionButton("help_4",
+                      "Help")),
+    col_widths = c(6,-3,3)
+  ),
   card(selectInput("select_station_4",
                    "Select Station:",
                    choices = station_choices,
                    selected = 7000)),
-  girafeOutput("plot_yearly_swise_start"),
-  girafeOutput("plot_yearly_swise_end"),
-  girafeOutput("plot_monthly_swise_start"),
-  girafeOutput("plot_monthly_swise_end"),
-  girafeOutput("plot_daily_swise_start"),
-  girafeOutput("plot_daily_swise_end")
+  layout_column_wrap(
+    width = 1/2,
+    girafeOutput("plot_yearly_swise_start"),
+    girafeOutput("plot_yearly_swise_end"),
+    girafeOutput("plot_monthly_swise_start"),
+    girafeOutput("plot_monthly_swise_end"),
+    girafeOutput("plot_daily_swise_start"),
+    girafeOutput("plot_daily_swise_end")
+  )
 )
 
 server <- function(input, output, session){
+  
+  observeEvent(input$help_4, {
+    showModal(modalDialog(
+      title = "How this pane works",
+      HTML("Placeholder")
+    ))
+  })
   
   # YEARLY DATA----
   
