@@ -89,18 +89,21 @@ ui <- page_fluid(
                       "Help")),
     col_widths = c(6,-3,3)
   ),
-  card(selectInput("select_station_4",
+  card(tags$head(
+    tags$style(HTML("#select_station_4+ div>.selectize-dropdown {position: unset;}"))
+  ),
+    selectInput("select_station_4",
                    "Select Station:",
                    choices = station_choices,
                    selected = 7000)),
   layout_column_wrap(
     width = 1/2,
-    girafeOutput("plot_yearly_swise_start"),
-    girafeOutput("plot_yearly_swise_end"),
-    girafeOutput("plot_monthly_swise_start"),
-    girafeOutput("plot_monthly_swise_end"),
-    girafeOutput("plot_daily_swise_start"),
-    girafeOutput("plot_daily_swise_end")
+    card(girafeOutput("plot_yearly_swise_start")),
+    card(girafeOutput("plot_yearly_swise_end")),
+    card(girafeOutput("plot_monthly_swise_start")),
+    card(girafeOutput("plot_monthly_swise_end")),
+    card(girafeOutput("plot_daily_swise_start")),
+    card(girafeOutput("plot_daily_swise_end"))
   )
 )
 
