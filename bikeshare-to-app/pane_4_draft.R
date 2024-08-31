@@ -310,7 +310,7 @@ server <- function(input, output, session){
                           use_stroke = TRUE),
              opts_hover(css = "stroke-width:2;"),
              opts_hover_inv(css = "opacity:0.3;"),
-             opts_selection(selected = as.Date(selected_day()),
+             opts_selection(selected = as.Date(selected_month()),
                             type = "single",
                             css = "stroke:black;stroke-width:2px")
            ))
@@ -376,7 +376,7 @@ server <- function(input, output, session){
                           use_stroke = TRUE),
              opts_hover(css = "stroke-width:2;"),
              opts_hover_inv(css = "opacity:0.3;"),
-             opts_selection(selected = as.Date(selected_day()),
+             opts_selection(selected = as.Date(selected_month()),
                             type = "single",
                             css = "stroke:black;stroke-width:2px")
            ))
