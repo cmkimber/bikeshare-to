@@ -84,7 +84,7 @@ for (i in (1:length(station_choices)))
 
 ui <- page_fluid(
   layout_columns(
-    card(titlePanel("Placeholder")),
+    card(titlePanel("Trips by Station")),
     card(actionButton("help_4",
                       "Help")),
     col_widths = c(6,-3,3)
@@ -98,12 +98,18 @@ ui <- page_fluid(
                    selected = 7000)),
   layout_column_wrap(
     width = 1/2,
-    card(girafeOutput("plot_yearly_swise_start")),
-    card(girafeOutput("plot_yearly_swise_end")),
-    card(girafeOutput("plot_monthly_swise_start")),
-    card(girafeOutput("plot_monthly_swise_end")),
-    card(girafeOutput("plot_daily_swise_start")),
-    card(girafeOutput("plot_daily_swise_end"))
+    card(card_header("Trips Started by Month"),
+         girafeOutput("plot_yearly_swise_start")),
+    card(card_header("Trips Ended by Month"), 
+         girafeOutput("plot_yearly_swise_end")),
+    card(card_header("Trips Started by Day"),
+         girafeOutput("plot_monthly_swise_start")),
+    card(card_header("Trips Ended by Day"),
+         girafeOutput("plot_monthly_swise_end")),
+    card(card_header("Trips Started by Hour"),
+         girafeOutput("plot_daily_swise_start")),
+    card(card_header("Trips Ended by Hour"),
+         girafeOutput("plot_daily_swise_end"))
   )
 )
 
