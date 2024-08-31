@@ -99,7 +99,7 @@ server <- function(input, output, session){
   
   # YEARLY DATA----
   
-  selected_month <- reactiveVal(value = "2022-01-01")
+  selected_month <- reactiveVal(value = NULL)
   
   observeEvent(selected_month(), {
     session$sendCustomMessage(type = 'plot_yearly_swise_start_set',
@@ -165,7 +165,7 @@ server <- function(input, output, session){
                                        use_stroke = TRUE),
                           opts_hover(css = "stroke:white;stroke-width:2px"),
                           opts_hover_inv(css = "opacity:0.3;"),
-                          opts_selection(selected = selected_month(),
+                          opts_selection(selected = "2022-01-01",
                                          type = "single",
                                          css = "stroke:black;stroke-width:2px")
            ))
@@ -221,7 +221,7 @@ server <- function(input, output, session){
                                        use_stroke = TRUE),
                           opts_hover(css = "stroke:white;stroke-width:2px"),
                           opts_hover_inv(css = "opacity:0.3;"),
-                          opts_selection(selected = selected_month(),
+                          opts_selection(selected = "2022-01-01",
                                          type = "single",
                                          css = "stroke:black;stroke-width:2px")
            ))
