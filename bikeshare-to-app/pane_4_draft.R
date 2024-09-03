@@ -302,17 +302,19 @@ server <- function(input, output, session){
   
   output$plot_monthly_swise_start <- renderGirafe({
     req(monthly_rides_swise_start())
+    jitterer <- position_jitter(width = 0.2, height = 0, seed = 123)
     p_m <- ggplot(monthly_rides_swise_start(), aes(x = trip_date,
                                                    y = n,
                                                    group = User.Type,
                                                    colour = User.Type
     )) +
-      geom_line_interactive() +
+      geom_line(position = jitterer) +
       geom_point_interactive(aes(tooltip = glue("{strftime(trip_date, format = '%a, %b %d')}<br/>",
                                                 "{User.Type}<br/>",
                                                 "{n} Trips<br/>"
       ),
-      data_id = trip_date)) +
+      data_id = trip_date),
+      position = jitterer) +
       labs(title = glue("{month(as.Date(selected_month()), label = TRUE)} {year(as.Date(selected_month()))}"),
            x = "Date",
            y = "Number of Trips",
@@ -369,17 +371,19 @@ server <- function(input, output, session){
   
   output$plot_monthly_swise_end <- renderGirafe({
     req(monthly_rides_swise_end())
+    jitterer <- position_jitter(width = 0.2, height = 0, seed = 123)
     p_m <- ggplot(monthly_rides_swise_end(), aes(x = trip_date,
                                                  y = n,
                                                  group = User.Type,
                                                  colour = User.Type
     )) +
-      geom_line_interactive() +
+      geom_line(position = jitterer) +
       geom_point_interactive(aes(tooltip = glue("{strftime(trip_date, format = '%a, %b %d')}<br/>",
                                                 "{User.Type}<br/>",
                                                 "{n} Trips<br/>"
       ),
-      data_id = trip_date)) +
+      data_id = trip_date),
+      position = jitterer) +
       labs(title = glue("{month(as.Date(selected_month()), label = TRUE)} {year(as.Date(selected_month()))}"),
            x = "Date",
            y = "Number of Trips",
