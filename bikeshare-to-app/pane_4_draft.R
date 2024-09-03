@@ -313,7 +313,8 @@ server <- function(input, output, session){
                                                 "{n} Trips<br/>"
       ),
       data_id = trip_date)) +
-      labs(x = "Date",
+      labs(title = glue("{month(as.Date(selected_month()), label = TRUE)} {year(as.Date(selected_month()))}"),
+           x = "Date",
            y = "Number of Trips",
            colour = "User Type") + 
       scale_x_date(date_breaks = "7 days",
@@ -379,7 +380,8 @@ server <- function(input, output, session){
                                                 "{n} Trips<br/>"
       ),
       data_id = trip_date)) +
-      labs(x = "Date",
+      labs(title = glue("{month(as.Date(selected_month()), label = TRUE)} {year(as.Date(selected_month()))}"),
+           x = "Date",
            y = "Number of Trips",
            colour = "User Type") + 
       scale_x_date(date_breaks = "7 days",
@@ -446,7 +448,8 @@ server <- function(input, output, session){
                                                 "{User.Type}<br/>",
                                                 "{n} Trips"),
                                  data_id = trip_hour)) +
-      labs(x = "Time",
+      labs(title = glue("{wday(as.Date(selected_day()), label = TRUE)}, {month(as.Date(selected_day()), label = TRUE)} {day(as.Date(selected_day()))}"),
+           x = "Time",
            y = "Number of Trips",
            colour = "User Type") + 
       scale_x_datetime(date_breaks = "4 hours",
@@ -503,7 +506,8 @@ output$plot_daily_swise_end <- renderGirafe({
                                               "{User.Type}<br/>",
                                               "{n} Trips"),
                                data_id = trip_hour)) +
-    labs(x = "Time",
+    labs(title = glue("{wday(as.Date(selected_day()), label = TRUE)}, {month(as.Date(selected_day()), label = TRUE)} {day(as.Date(selected_day()))}"),
+         x = "Time",
          y = "Number of Trips",
          colour = "User Type") + 
     scale_x_datetime(date_breaks = "4 hours",
