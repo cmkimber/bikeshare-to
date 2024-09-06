@@ -447,7 +447,7 @@ server <- function(input, output, session){
                                            y = n,
                                            group = User.Type,
                                            colour = User.Type)) +
-      geom_line_interactive() +
+      geom_line() +
       geom_point_interactive(aes(tooltip = glue("{strftime(trip_hour, format = '%H:%M', tz = 'GMT')}<br/>",
                                                 "{User.Type}<br/>",
                                                 "{n} Trips"),
@@ -505,7 +505,7 @@ output$plot_daily_swise_end <- renderGirafe({
                                                y = n,
                                                group = User.Type,
                                                colour = User.Type)) +
-    geom_line_interactive() +
+    geom_line() +
     geom_point_interactive(aes(tooltip = glue("{strftime(trip_hour, format = '%H:%M', tz = 'GMT')}<br/>",
                                               "{User.Type}<br/>",
                                               "{n} Trips"),
