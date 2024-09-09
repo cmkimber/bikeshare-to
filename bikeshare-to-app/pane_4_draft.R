@@ -118,7 +118,11 @@ server <- function(input, output, session){
   observeEvent(input$help_4, {
     showModal(modalDialog(
       title = "How this pane works",
-      HTML("Placeholder")
+      HTML("This pane shows the number of rides that start and end at a particular station over a selected time period. The station of interest can be chosen using the dropdown menu at the top.<br/><br/>
+
+The top bar plots show data by month across 2022. To drill down into the monthly data, a month of interest is selected by clicking on the bars in one of the Trips by Month plots. This will display the rides by day for that month in the line plots immediately below. To drill down further, a day of interest is selected by clicking on any of the data points for that day in one of the Trips by Day plots. The hourly data for that day is then displayed in the line plots immediately below.<br/><br/>
+
+The time period chosen is synchronized between the plots for Trips Started and Trips Ended, so choosing a time period for one type of data will change the period for the other as well. To see details of rides by user type in any given plot, hover over the data points of interest to display a popup.")
     ))
   })
   
