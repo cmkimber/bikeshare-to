@@ -36,7 +36,7 @@ This pane shows the number of trips that start and end at a given Bike Share Tor
 
 Monthly data is visualized using a bar plot, which can be used to select a month to view daily trip data for. The daily data is visualized using a line plot, which in turn can be used to select a day to view hourly data for. Within each plot, hovering over data from a particular moment in time and user type displays a popup showing further details.
 
-![](V]Assets/Screen_Recording_Pane_4.gif)
+![](/Assets/Screen_Recording_Pane_4.gif)
 
 ## Acknowledgements
 
