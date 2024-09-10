@@ -35,7 +35,7 @@ _Note_: In my experience, the _renderLeaflet()_ function in Shiny did not play n
 - [X] Pane 3: Station Departure-Arrival Ratio (Flows)
 - [ ] Additional Panes (Working Concepts)
   - [ ] Trip Frequency by User Type
-  - [ ] Distribution of Trips by Time of Day
+  - [X] Distribution of Trips by Time of Day
   - [ ] Relationship Between Station Use and TTC Station Proximity
 - [ ] Add Interpretive Analysis to Panes
 

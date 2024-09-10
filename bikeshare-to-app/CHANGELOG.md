@@ -1,5 +1,14 @@
 # Changelog
 
+## v.2.1
+
+### Added or Changed
+
+* Added pane 4 to the app
+* Pane 4 displays the number of trips started and ended at a given station across 3 different time periods (monthly, daily, hourly) for the two different user types
+  - This is visualized using ggiraph, with a bar plot showing monthly data and line plots showing daily and hourly data for a selected month/day
+  - Drilling down the time period is accomplished using the interactive selection features of ggiraph, where clicking on a time period in a higher order graph selects the focal period for a lower order graph
+
 ## v.2.0
 
 ### Added or Changed
