@@ -30,6 +30,14 @@ The ratio of trips started to ended is shown using colour-coded markers on the m
 
 ![](/Assets/Screen_Recording_Pane_3.gif)
 
+## Pane 4: Trips by Station
+
+This pane shows the number of trips that start and end at a given Bike Share Toronto station in a given time period in 2022; at one time, monthly, daily and hourly patterns are visualized using a mix of bar plots and line plots. In each case, trips are grouped by user type and the cumulative usage is also displayed. The user first selects a station to view using a dropdown menu at the top of the pane.
+
+Monthly data is visualized using a bar plot, which can be used to select a month to view daily trip data for. The daily data is visualized using a line plot, which in turn can be used to select a day to view hourly data for. Within each plot, hovering over data from a particular moment in time and user type displays a popup showing further details.
+
+![](V]Assets/Screen_Recording_Pane_4.gif)
+
 ## Acknowledgements
 
 * [convert-video-to-gif](https://blog.interaction-dynamics.io/how-to-convert-your-screen-recordings-to-gif-on-macos-productivity-1-781dbe56fe5c)
