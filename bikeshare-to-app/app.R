@@ -1231,8 +1231,8 @@ The time period chosen is synchronized between the plots for Trips Started and T
       count(trip_hour) %>%
       collect() %>%
       group_by(User.Type) %>%
-      complete(trip_hour = seq(from = as.POSIXct(selected_day(), tz = "GMT"),
-                               to = as.POSIXct(selected_day(), tz = "GMT") + hours(24) - seconds(1),
+      complete(trip_hour = seq(from = as.POSIXct(selected_day(), tz = "America/Toronto"),
+                               to = as.POSIXct(selected_day(), tz = "America/Toronto") + hours(24) - seconds(1),
                                by = "hour"),
       ) %>%
       union_all(rides_2022_dset %>%
@@ -1240,8 +1240,8 @@ The time period chosen is synchronized between the plots for Trips Started and T
                   mutate(trip_hour = floor_date(Start.Time, unit = "hour")) %>%
                   count(trip_hour) %>%
                   collect() %>%
-                  complete(trip_hour = seq(from = as.POSIXct(selected_day(), tz = "GMT"),
-                                           to = as.POSIXct(selected_day(), tz = "GMT") + hours(24) - seconds(1),
+                  complete(trip_hour = seq(from = as.POSIXct(selected_day(), tz = "America/Toronto"),
+                                           to = as.POSIXct(selected_day(), tz = "America/Toronto") + hours(24) - seconds(1),
                                            by = "hour")) %>%
                   mutate(User.Type = "Total", .before = 1)
       ) %>%
@@ -1255,7 +1255,7 @@ The time period chosen is synchronized between the plots for Trips Started and T
                                                  group = User.Type,
                                                  colour = User.Type)) +
       geom_line() +
-      geom_point_interactive(aes(tooltip = glue("{strftime(trip_hour, format = '%H:%M', tz = 'GMT')}<br/>",
+      geom_point_interactive(aes(tooltip = glue("{strftime(trip_hour, format = '%H:%M', tz = 'America/Toronto')}<br/>",
                                                 "{User.Type}<br/>",
                                                 "{n} Trips"),
                                  data_id = trip_hour)) +
@@ -1289,8 +1289,8 @@ The time period chosen is synchronized between the plots for Trips Started and T
       count(trip_hour) %>%
       collect() %>%
       group_by(User.Type) %>%
-      complete(trip_hour = seq(from = as.POSIXct(selected_day(), tz = "GMT"),
-                               to = as.POSIXct(selected_day(), tz = "GMT") + hours(24) - seconds(1),
+      complete(trip_hour = seq(from = as.POSIXct(selected_day(), tz = "America/Toronto"),
+                               to = as.POSIXct(selected_day(), tz = "America/Toronto") + hours(24) - seconds(1),
                                by = "hour"),
       ) %>%
       union_all(rides_2022_dset %>%
@@ -1298,8 +1298,8 @@ The time period chosen is synchronized between the plots for Trips Started and T
                   mutate(trip_hour = floor_date(End.Time, unit = "hour")) %>%
                   count(trip_hour) %>%
                   collect() %>%
-                  complete(trip_hour = seq(from = as.POSIXct(selected_day(), tz = "GMT"),
-                                           to = as.POSIXct(selected_day(), tz = "GMT") + hours(24) - seconds(1),
+                  complete(trip_hour = seq(from = as.POSIXct(selected_day(), tz = "America/Toronto"),
+                                           to = as.POSIXct(selected_day(), tz = "America/Toronto") + hours(24) - seconds(1),
                                            by = "hour")) %>%
                   mutate(User.Type = "Total", .before = 1)
       ) %>%
@@ -1313,7 +1313,7 @@ The time period chosen is synchronized between the plots for Trips Started and T
                                                group = User.Type,
                                                colour = User.Type)) +
       geom_line() +
-      geom_point_interactive(aes(tooltip = glue("{strftime(trip_hour, format = '%H:%M', tz = 'GMT')}<br/>",
+      geom_point_interactive(aes(tooltip = glue("{strftime(trip_hour, format = '%H:%M', tz = 'America/Toronto')}<br/>",
                                                 "{User.Type}<br/>",
                                                 "{n} Trips"),
                                  data_id = trip_hour)) +
